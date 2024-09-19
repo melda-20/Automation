@@ -6,6 +6,7 @@ variable "username_vsphere" {
 variable "password_vsphere" {
   type        = string
   description = "password for vsphere"
+  sensitive = true
 }
 
 variable "url_vsphere" {
