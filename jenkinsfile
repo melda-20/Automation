@@ -4,6 +4,7 @@ pipeline {
     environment {
         TF_VERSION = '1.9.5'
         ANSIBLE_VERSION = '2.16.11' 
+        SECRETS_PATH = '/var/lib/jenkins/secrets/secrets.tf'  // Path to secrets file on server
     }
 
     stages {
@@ -15,7 +16,11 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                // Use the secret file from the Jenkins server
+                sh '''
+                cp $SECRETS_PATH ./secrets.tf  # Copy secrets file to working directory
+                terraform init
+                '''
             }
         }
 
