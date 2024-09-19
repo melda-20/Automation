@@ -1,0 +1,7 @@
+vsphere_datacenter = "Netlab-DC"
+vsphere_resource_pool = "I3-DB01-RP"
+vsphere_datastore = "NIM01-I3-DB"
+#vsphere_compute_cluster = "Netlab-Cluster-B"
+vsphere_network = "2718_I483725_PVlanA"
+vsphere_virtual_machine_template = "Templ_Ubuntu-Linux_Server_22.04.4"
+vsphere_virtual_machine_name = "cloned_virtual_machine"
