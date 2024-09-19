@@ -60,7 +60,7 @@ resource "vsphere_virtual_machine" "web-server" {
 
   disk {
     label            = "disk0"
-    size             = 20
+    size             = 32
     eagerly_scrub    = false
     thin_provisioned = true
   }
