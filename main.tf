@@ -52,7 +52,7 @@ resource "vsphere_virtual_machine" "web-server" {
   num_cpus = 2
   memory   = 2048
   guest_id = "ubuntu64Guest"
-  #os_type = "Ubuntu Linux (64-bit)"
+  os_family = "Ubuntu Linux (64-bit)"
 
   network_interface {
     network_id   = data.vsphere_network.network.id
