@@ -35,7 +35,7 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
   datastore_id     = data.vsphere_datastore.datastore.id
 
   num_cpus = data.vsphere_virtual_machine.template.num_cpus
-  memory   = data.vsphere_virtual_machine.template.memory_mb
+  memory   = data.vsphere_virtual_machine.template.memory
   guest_id = data.vsphere_virtual_machine.template.guest_id
 
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
