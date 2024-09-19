@@ -29,9 +29,8 @@ data "vsphere_compute_cluster" "cluster" {
 }
 
 data "vsphere_resource_pool" "rp" {
-  name               = "I3-DB01-RP"
-  datacenter_id      = data.vsphere_datacenter.dc.id
-  compute_cluster_id = data.vsphere_compute_cluster.cluster.id
+  name          = "I3-DB01-RP"
+  datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_network" "network" {
