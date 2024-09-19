@@ -3,7 +3,7 @@ variable "username_vsphere" {
   description = "username for vsphere"
 }
 
-variable "pasword_vsphere" {
+variable "password_vsphere" {
   type        = string
   description = "password for vsphere"
 }
