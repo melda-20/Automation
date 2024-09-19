@@ -19,7 +19,7 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "DataCluster-Students"
+  name          = "NIM01-4"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
