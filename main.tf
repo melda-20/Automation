@@ -47,11 +47,11 @@ data "vsphere_virtual_machine" "template" {
 #machine name!!!!
 resource "vsphere_virtual_machine" "cloned_virtual_machine" {
   name             = "${var.vsphere_virtual_machine_name}"
-  resource_pool_id = "${data.vsphere_resource_pool.rp.id}"
+  resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
-  num_cpus = "${data.vsphere_virtual_machine_template.num_cpus}"
-  memory   = "${data.vsphere_virtual_machine_template.template.memory}"
+  num_cpus = "${data.vsphere_virtual_machine.template.num_cpus}"
+  memory   = "${data.vsphere_virtual_machine_template.template.memory_mb}"
   guest_id = "${data.vsphere_virtual_machine_template.guest_id}"
 
   scsi_type = "${data.vsphere_virtual_machine_template.scsi_type}"
@@ -63,7 +63,7 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
 
   disk {
     label            = "disk0"
-    size             = "${data.vsphere_virtual_machine_template.disks.0.size}"
+    size             = "${data.vsphere_virtual_machine.template.disks[0].size}"
     thin_provisioned = true
   }
 
