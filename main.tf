@@ -8,6 +8,7 @@ provider "vsphere" {
 #data "vsphere_datacenter" "dc" {
 #  name = var.vsphere_datacenter
 #}
+data "vsphere_datacenter" "dc" {}
 
 resource "vsphere_folder" "folder" {
   path          = var.vsphere_folder_path
