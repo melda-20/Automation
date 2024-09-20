@@ -14,7 +14,7 @@ variable "url_vsphere" {
   description = "url for vsphere"
 }
 
-variable "vsphere_datacenter" {}
+#variable "vsphere_datacenter" {}
 
 variable "vsphere_resource_pool" {}
 
