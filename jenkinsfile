@@ -34,6 +34,24 @@ pipeline {
                 sh 'terraform apply -var-file=secrets.tfvars -auto-approve'
             }
         }
+
+        stage('Get Terraform Output') {
+            steps {
+                VM_IP = sh(script: 'terraform output -raw vm_ip', returnStdout: true).trim()
+                echo "VM IP: ${VM_IP}"
+            }
+        }
+
+        stage('Run Ansible Playbook: apache_webserver'){
+            script {
+                // Ansible-playbook uitvoeren om de VM te upgraden en Apache te installeren
+                sh """
+                ansible-playbook -i ${VM_IP}, apache_webserver.yml \                    
+                --private-key ${SSH_PRIVATE_KEY} \
+                -u student
+                """
+            }
+        }
     }
 
     post {
