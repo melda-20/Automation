@@ -12,7 +12,7 @@ data "vsphere_datacenter" "dc" {
 resource "vsphere_folder" "folder" {
   path          = var.vsphere_folder_path
   type          = "vm"
-  datacenter_id = data.vsphere_datacenter.datacenter.id
+  datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_datastore" "datastore" {
