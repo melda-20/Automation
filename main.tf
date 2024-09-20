@@ -39,7 +39,7 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
   name             = var.vsphere_virtual_machine_name
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
-  folder           = vsphere_folder.folder.path
+  folder_path           = vsphere_folder.folder.path
 
   num_cpus = data.vsphere_virtual_machine.template.num_cpus
   memory   = data.vsphere_virtual_machine.template.memory
