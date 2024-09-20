@@ -62,18 +62,18 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
     template_uuid = data.vsphere_virtual_machine.template.id
 
     # Uncomment this if you need to customize the VM (network and hostname customization)
-    # customize {
-    #   linux_options {
-    #     host_name = "web-server"
-    #     domain    = "local"
-    #   }
+    customize {
+       linux_options {
+         host_name = "web-server"
+         domain    = "local"
+       }
 
-    #   network_interface {
-    #     ipv4_address = "10.0.10.100"
-    #     ipv4_netmask = 24
-    #   }
+       network_interface {
+         ipv4_address = "10.0.10.100"
+         ipv4_netmask = 24
+       }
 
-    #   ipv4_gateway = "10.0.10.1"
-    # }
+       ipv4_gateway = "10.0.10.1"
+     }
   }
 }
