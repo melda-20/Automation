@@ -5,10 +5,9 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
-#data "vsphere_datacenter" "dc" {
-#  name = var.vsphere_datacenter
-#}
-data "vsphere_datacenter" "dc" {}
+data "vsphere_datacenter" "dc" {
+  name = var.vsphere_datacenter
+}
 
 resource "vsphere_folder" "folder" {
   path          = var.vsphere_folder_path

@@ -14,13 +14,11 @@ variable "url_vsphere" {
   description = "url for vsphere"
 }
 
-#variable "vsphere_datacenter" {}
+variable "vsphere_datacenter" {}
 
 variable "vsphere_resource_pool" {}
 
 variable "vsphere_datastore" {}
-
-#variable "vsphere_compute_cluster" {}
 
 variable "vsphere_network" {}
 
