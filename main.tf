@@ -9,11 +9,11 @@ data "vsphere_datacenter" "dc" {
   name = var.vsphere_datacenter
 }
 
-resource "vsphere_folder" "folder" {
-  path          = var.vsphere_folder_path
-  type          = "vm"
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
+#resource "vsphere_folder" "folder" {
+#  path          = var.vsphere_folder_path
+#  type          = "vm"
+#  datacenter_id = data.vsphere_datacenter.dc.id
+#}
 
 data "vsphere_datastore" "datastore" {
   name          = var.vsphere_datastore
@@ -39,7 +39,7 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
   name             = var.vsphere_virtual_machine_name
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
-  folder           = vsphere_folder.folder.path
+  folder           = "${var.vsphere_folder_path}"
 
   num_cpus = data.vsphere_virtual_machine.template.num_cpus
   memory   = data.vsphere_virtual_machine.template.memory
