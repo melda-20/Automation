@@ -1,5 +1,5 @@
 vsphere_datacenter = "Netlab-DC"
-vsphere_resource_pool = "I3-DB01-RP"
+vsphere_resource_pool = "I483725"
 vsphere_datastore = "NIM01-I3-DB"
 #vsphere_compute_cluster = "Netlab-Cluster-B"
 vsphere_network = "2718_I483725_PVlanA"
