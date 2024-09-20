@@ -1,4 +1,4 @@
-vsphere_datacenter = "Netlab-DC"
+vsphere_datacenter = "vcenter.netlab.fontysict.nl"
 vsphere_resource_pool = "I483725"
 vsphere_datastore = "NIM01-I3-DB"
 #vsphere_compute_cluster = "Netlab-Cluster-B"
