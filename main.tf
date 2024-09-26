@@ -69,13 +69,6 @@ resource "vsphere_virtual_machine" "web-server" {
 
        ipv4_gateway = "10.0.10.1"
     
-          # Run a startup script to install SSH and open port 22
-      customize {
-        linux_options {
-          host_name = "web-server"
-          domain    = "local"
-      }
-
       # Custom startup script
       post_customization_script = <<EOF
       #!/bin/bash
