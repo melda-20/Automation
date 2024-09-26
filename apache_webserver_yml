@@ -1,7 +1,7 @@
 ---
 - name: Upgrade Ubuntu Server and Install Apache Web Server
-  hosts: your_ubuntu_server  # De groep van hosts waar de playbook op wordt uitgevoerd
-  become: yes  # Zorg ervoor dat de taken met root-privileges worden uitgevoerd
+  hosts: all
+  become: yes
   tasks:
     - name: Update APT repository and cache
       apt:
@@ -17,6 +17,7 @@
       apt:
         name: apache2
         state: present
+      register: apache_installed
 
     - name: Ensure Apache service is started and enabled
       service:
@@ -29,7 +30,7 @@
         content: |
           <html>
           <head><title>Welcome to My Web Server</title></head>
-          <body><h1>Hello from Apache Web Server</h1></body>
+          <body><h1>Hello from my Apache Web Server</h1></body>
           </html>
         dest: /var/www/html/index.html
         owner: www-data
@@ -41,3 +42,14 @@
         rule: allow
         port: '80'
         proto: tcp
+
+    - name: Restart Apache service
+      service:
+        name: apache2
+        state: restarted
+      when: apache_installed is succeeded
+
+    - name: Ensure Apache is enabled at boot
+      service:
+        name: apache2
+        enabled: yes

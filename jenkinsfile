@@ -44,7 +44,6 @@ pipeline {
 
         stage('Run Ansible Playbook: apache_webserver'){
             script {
-                // Ansible-playbook uitvoeren om de VM te upgraden en Apache te installeren
                 sh """
                 ansible-playbook -i ${VM_IP}, apache_webserver.yml \                    
                 --private-key ${SSH_PRIVATE_KEY} \
