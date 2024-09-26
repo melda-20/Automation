@@ -73,6 +73,7 @@ resource "vsphere_virtual_machine" "web-server" {
       # Voeg de publieke SSH-sleutel toe aan de nieuwe server
       linux_options {
         ssh_authorized_keys = [var.ssh_public_key]
+      }
     }
   }
 }
