@@ -80,5 +80,6 @@ resource "vsphere_virtual_machine" "web-server" {
         "sudo systemctl enable ssh",
         "sudo systemctl start ssh"
       ]
+   }
   }
 }
