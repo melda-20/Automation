@@ -39,7 +39,7 @@ resource "vsphere_virtual_machine" "web-server" {
       users:
         - name: ubuntu
           ssh-authorized-keys:
-            - "${var.ssh_pub_key}"
+            - "${var.ssh_public_key}"
           sudo: ['ALL=(ALL) NOPASSWD:ALL']
           groups: sudo
           shell: /bin/bash

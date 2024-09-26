@@ -14,7 +14,7 @@ variable "url_vsphere" {
   description = "url for vsphere"
 }
 
-variable "ssh_pub_key" {
+variable "ssh_public_key" {
   type        = string
 }
 
