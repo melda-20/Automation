@@ -1,8 +1,3 @@
-variable "ssh_public_key" {
-  description = "De publieke SSH-sleutel voor de nieuwe server"
-  type        = string
-}
-
 resource "vsphere_virtual_machine" "web-server" {
   name             = var.vsphere_virtual_machine_name
   resource_pool_id = data.vsphere_resource_pool.pool.id
