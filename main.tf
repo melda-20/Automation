@@ -70,6 +70,24 @@ resource "vsphere_virtual_machine" "web-server" {
        }
 
        ipv4_gateway = "10.0.10.1"
+
+      # Provisioner to install SSH and configure the firewall
+      provisioner "remote-exec" {
+        inline = [
+          "sudo apt-get update",
+          "sudo apt-get install -y openssh-server",
+          "sudo ufw allow 22/tcp",
+          "sudo systemctl enable ssh",
+          "sudo systemctl start ssh"
+        ]
+
+    connection {
+      type     = "ssh"
+      user     = "student"         # Change this to your template user
+      password = "student"         # Change this to your template password or set up SSH key-based authentication
+      host     = "10.0.10.100"     # The VM's IP address after deployment
+      port     = 22
+    }
    }
   }
 }
