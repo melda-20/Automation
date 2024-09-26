@@ -9,6 +9,13 @@
     ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
 
   tasks:
+    - name: Test verbinding door een eenvoudig commando uit te voeren
+      command: whoami
+
+    - name: Voeg host key toe aan known_hosts
+      shell: ssh-keyscan -H {{ ansible_host }} >> ~/.ssh/known_hosts
+      ignore_errors: yes
+
     - name: Update APT repository and cache
       apt:
         update_cache: yes
