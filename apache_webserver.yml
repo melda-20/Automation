@@ -1,5 +1,5 @@
 ---
-- name: Upgrade Ubuntu Server and Install Apache Web Server
+- name: Configure Ubuntu Server (Enable SSH and Open Port 22)
   hosts: all
   become: yes
   vars:
@@ -8,6 +8,23 @@
     ansible_become_pass: "student"
 
   tasks:
+    - name: Install SSH
+      apt:
+        name: openssh-server
+        state: present
+
+    - name: Open port 22 for SSH in the firewall
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Ensure SSH is started and enabled on boot
+      service:
+        name: ssh
+        state: started
+        enabled: yes
+
     - name: Update APT repository and cache
       apt:
         update_cache: yes
