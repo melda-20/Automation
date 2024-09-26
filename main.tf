@@ -71,5 +71,17 @@ resource "vsphere_virtual_machine" "web-server" {
 
        ipv4_gateway = "10.0.10.1"
     }
+
+    # cloud-init script to install SSH and open port 22
+      user_data = <<EOF
+#cloud-config
+package_update: true
+packages:
+  - openssh-server
+runcmd:
+  - ufw allow 22/tcp
+  - systemctl enable ssh
+  - systemctl start ssh
+EOF
   }
 }
