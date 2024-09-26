@@ -4,18 +4,10 @@
   become: yes
   vars:
     ansible_user: "student"
-    ansible_ssh_pass: "student"
-    ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_rsa"  # Privé-sleutelpad van Jenkins
-    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+    ansible_ssh_pass: "{{ ansible_ssh_pass }}"
+    ansible_become_pass: "{{ ansible_become_pass }}"  # This will be provided by Jenkins pipeline
 
   tasks:
-    - name: Test verbinding door een eenvoudig commando uit te voeren
-      command: whoami
-
-    - name: Voeg host key toe aan known_hosts
-      shell: ssh-keyscan -H {{ ansible_host }} >> ~/.ssh/known_hosts
-      ignore_errors: yes
-
     - name: Update APT repository and cache
       apt:
         update_cache: yes
