@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         TF_VERSION = '1.9.5'
-        ANSIBLE_VERSION = '2.16.11' 
+        ANSIBLE_VERSION = '2.16.11'
         SECRETS_PATH = '/var/lib/jenkins/secrets/secrets.tfvars'
     }
 
@@ -51,11 +51,15 @@ pipeline {
                     SSH_USER = sh(script: "grep 'ssh_user' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
                     SSH_USER_PASSWORD = sh(script: "grep 'ssh_user_password' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
 
+                    // Controleer of de variabelen zijn opgehaald
+                    echo "SSH_USER: ${SSH_USER}"
+                    echo "SSH_USER_PASSWORD: ${SSH_USER_PASSWORD}"
+
                     // Voer het Ansible-playbook uit met SSH-gebruiker en wachtwoord authenticatie
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
                     -u ${SSH_USER} \
-                    --extra-vars "ssh_user=${SSH_USER} ssh_user_password=${SSH_USER_PASSWORD}"
+                    --extra-vars "ansible_user=${SSH_USER} ansible_ssh_pass=${SSH_USER_PASSWORD} ansible_become_pass=${SSH_USER_PASSWORD}"
                     """
                 }
             }

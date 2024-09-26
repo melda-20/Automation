@@ -3,29 +3,11 @@
   hosts: all
   become: yes
   vars:
-    ansible_user: "{{ ssh_user }}"  # Haal SSH-gebruiker op uit variabelen
-    ansible_ssh_pass: "{{ ssh_user_password }}"  # Haal wachtwoord op uit variabelen
-    ansible_become_pass: "{{ ssh_user_password }}"  # Wachtwoord voor sudo
-  
+    ansible_user: "{{ ssh_user }}"  # Gebruikersnaam wordt dynamisch doorgegeven
+    ansible_ssh_pass: "{{ ssh_user_password }}"  # Wachtwoord voor SSH wordt dynamisch doorgegeven
+    ansible_become_pass: "{{ ssh_user_password }}"  # Sudo-wachtwoord wordt dynamisch doorgegeven
+
   tasks:
-    - name: Zorg ervoor dat OpenSSH is geïnstalleerd
-      apt:
-        name: openssh-server
-        state: present
-        update_cache: yes
-  
-    - name: Zorg ervoor dat SSH is gestart en ingeschakeld bij opstarten
-      service:
-        name: ssh
-        state: started
-        enabled: yes
-
-    - name: Sta SSH-verkeer toe via de firewall
-      ufw:
-        rule: allow
-        port: '22'
-        proto: tcp
-
     - name: Update APT repository and cache
       apt:
         update_cache: yes
