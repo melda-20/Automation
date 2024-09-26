@@ -5,6 +5,7 @@ pipeline {
         TF_VERSION = '1.9.5'
         ANSIBLE_VERSION = '2.16.11' 
         SECRETS_PATH = '/var/lib/jenkins/secrets/secrets.tfvars'
+        SSH_PRIVATE_KEY = credentials('your-ssh-key-id')  // Voeg hier de juiste credentials ID toe
     }
 
     stages {
@@ -37,18 +38,22 @@ pipeline {
 
         stage('Get Terraform Output') {
             steps {
-                VM_IP = sh(script: 'terraform output -raw vm_ip', returnStdout: true).trim()
-                echo "VM IP: ${VM_IP}"
+                script {
+                    VM_IP = sh(script: 'terraform output -raw vm_ip', returnStdout: true).trim()
+                    echo "VM IP: ${VM_IP}"
+                }
             }
         }
 
-        stage('Run Ansible Playbook: apache_webserver'){
-            script {
-                sh """
-                ansible-playbook -i ${VM_IP}, apache_webserver.yml \                    
-                --private-key ${SSH_PRIVATE_KEY} \
-                -u student
-                """
+        stage('Run Ansible Playbook: apache_webserver') {
+            steps {
+                script {
+                    sh """
+                    ansible-playbook -i ${VM_IP}, apache_webserver.yml \
+                    --private-key ${SSH_PRIVATE_KEY} \
+                    -u student
+                    """
+                }
             }
         }
     }
