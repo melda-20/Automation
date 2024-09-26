@@ -18,6 +18,10 @@ variable "ssh_pub_key" {
   type        = string
 }
 
+variable "ssh_private_key" {
+  type        = string
+}
+
 variable "vsphere_datacenter" {}
 
 variable "vsphere_resource_pool" {}
