@@ -89,5 +89,6 @@ resource "vsphere_virtual_machine" "web-server" {
       port     = 22
     }
    }
+   }
   }
 }
