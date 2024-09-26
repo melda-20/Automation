@@ -5,7 +5,6 @@ pipeline {
         TF_VERSION = '1.9.5'
         ANSIBLE_VERSION = '2.16.11' 
         SECRETS_PATH = '/var/lib/jenkins/secrets/secrets.tfvars'
-        SSH_PRIVATE_KEY = credentials('your-ssh-key-id')  // Voeg hier de juiste credentials ID toe
     }
 
     stages {
@@ -48,9 +47,11 @@ pipeline {
         stage('Run Ansible Playbook: apache_webserver') {
             steps {
                 script {
+                    SSH_PRIVATE_KEY = sh(script: "grep 'ssh_private_key' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
+
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
-                    --private-key ${SSH_PRIVATE_KEY} \
+                    --private-key <(echo "${SSH_PRIVATE_KEY}") \
                     -u student
                     """
                 }
