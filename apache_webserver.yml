@@ -3,9 +3,9 @@
   hosts: all
   become: yes
   vars:
-    ansible_user: "{{ ssh_user }}"  # Gebruikersnaam wordt dynamisch doorgegeven
-    ansible_ssh_pass: "{{ ssh_user_password }}"  # Wachtwoord voor SSH wordt dynamisch doorgegeven
-    ansible_become_pass: "{{ ssh_user_password }}"  # Sudo-wachtwoord wordt dynamisch doorgegeven
+    ansible_user: "{{ ansible_user }}"
+    ansible_ssh_pass: "{{ ansible_ssh_pass }}" 
+    ansible_become_pass: "{{ ansible_ssh_pass }}" 
 
   tasks:
     - name: Update APT repository and cache
@@ -22,7 +22,6 @@
       apt:
         name: apache2
         state: present
-      register: apache_installed
 
     - name: Ensure Apache service is started and enabled
       service:
@@ -52,9 +51,3 @@
       service:
         name: apache2
         state: restarted
-      when: apache_installed is succeeded
-
-    - name: Ensure Apache is enabled at boot
-      service:
-        name: apache2
-        enabled: yes

@@ -58,7 +58,6 @@ pipeline {
                     // Voer het Ansible-playbook uit met SSH-gebruiker en wachtwoord authenticatie
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
-                    -u ${SSH_USER} \
                     --extra-vars "ansible_user=${SSH_USER} ansible_ssh_pass=${SSH_USER_PASSWORD} ansible_become_pass=${SSH_USER_PASSWORD}"
                     """
                 }
