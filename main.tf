@@ -70,16 +70,6 @@ resource "vsphere_virtual_machine" "web-server" {
        }
 
        ipv4_gateway = "10.0.10.1"
-    }
-
-   provisioner "remote-exec" {
-      inline = [
-        "sudo apt-get update",
-        "sudo apt-get install -y openssh-server",
-        "sudo ufw allow 22/tcp",
-        "sudo systemctl enable ssh",
-        "sudo systemctl start ssh"
-      ]
    }
   }
 }
