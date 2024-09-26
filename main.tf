@@ -61,6 +61,7 @@ resource "vsphere_virtual_machine" "web-server" {
       linux_options {
         host_name = "web-server"
         domain    = "local"
+        ssh_authorized_keys = [var.ssh_public_key]
       }
 
        network_interface {
@@ -69,11 +70,6 @@ resource "vsphere_virtual_machine" "web-server" {
        }
 
        ipv4_gateway = "10.0.10.1"
-
-      # Voeg de publieke SSH-sleutel toe aan de nieuwe server
-      linux_options {
-        ssh_authorized_keys = [var.ssh_public_key]
-      }
     }
   }
 }
