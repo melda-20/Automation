@@ -47,17 +47,10 @@ pipeline {
         stage('Run Ansible Playbook: apache_webserver') {
             steps {
                 script {
-                    // Haal de SSH-gebruiker en het wachtwoord uit secrets.tfvars
-                    //SSH_USER = sh(script: "grep 'ssh_user' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
-                    //SSH_USER_PASSWORD = sh(script: "grep 'ssh_user_password' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
-
-                    // Controleer of de variabelen zijn opgehaald
-                    //echo "SSH_USER: ${SSH_USER}"
-                    //echo "SSH_USER_PASSWORD: ${SSH_USER_PASSWORD}"
-
-                    // Voer het Ansible-playbook uit met SSH-gebruiker en wachtwoord authenticatie
+                    // Gebruik de statische SSH-gebruiker student en het standaard wachtwoord
                     sh """
-                    ansible-playbook -i ${VM_IP}, apache_webserver.yml
+                    ansible-playbook -i ${VM_IP}, apache_webserver.yml \
+                    --extra-vars "ansible_user=student ansible_ssh_pass=student ansible_become_pass=student"
                     """
                 }
             }
