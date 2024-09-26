@@ -1,30 +1,12 @@
 ---
-- name: Configure Ubuntu Server (Enable SSH and Open Port 22)
+- name: Upgrade Ubuntu Server and Install Apache Web Server
   hosts: all
   become: yes
   vars:
     ansible_user: "student"
-    ansible_ssh_pass: "student"
-    ansible_become_pass: "student"
+    ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_rsa"  # Privé-sleutelpad van Jenkins
 
   tasks:
-    - name: Install SSH
-      apt:
-        name: openssh-server
-        state: present
-
-    - name: Open port 22 for SSH in the firewall
-      ufw:
-        rule: allow
-        port: '22'
-        proto: tcp
-
-    - name: Ensure SSH is started and enabled on boot
-      service:
-        name: ssh
-        state: started
-        enabled: yes
-
     - name: Update APT repository and cache
       apt:
         update_cache: yes

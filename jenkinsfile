@@ -44,12 +44,13 @@ pipeline {
             }
         }
 
-        stage('Run Ansible Playbook: Configure SSH and configure webserver') {
+        stage('Run Ansible Playbook: apache_webserver') {
             steps {
                 script {
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
-                    --extra-vars "ansible_user=student ansible_ssh_pass=student ansible_become_pass=student"
+                    --private-key /var/lib/jenkins/.ssh/id_rsa \
+                    -u student
                     """
                 }
             }
