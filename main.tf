@@ -71,16 +71,8 @@ resource "vsphere_virtual_machine" "web-server" {
        ipv4_gateway = "10.0.10.1"
 
       # Voeg de publieke SSH-sleutel toe aan de nieuwe server
-      user_data = <<EOF
-      #cloud-config
-      users:
-        - name: ubuntu
-          ssh-authorized-keys:
-            - "${var.ssh_public_key}"
-          sudo: ['ALL=(ALL) NOPASSWD:ALL']
-          groups: sudo
-          shell: /bin/bash
-      EOF
+      linux_options {
+        ssh_authorized_keys = [var.ssh_public_key]
     }
   }
 }
