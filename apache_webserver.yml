@@ -2,7 +2,29 @@
 - name: Upgrade Ubuntu Server and Install Apache Web Server
   hosts: all
   become: yes
+  vars:
+    ansible_ssh_pass: "{{ ssh_user_password }}"
+    ansible_become_pass: "{{ ssh_user_password }}"
+  
   tasks:
+    - name: Zorg ervoor dat OpenSSH is geïnstalleerd
+      apt:
+        name: openssh-server
+        state: present
+        update_cache: yes
+  
+    - name: Zorg ervoor dat SSH is gestart en ingeschakeld bij opstarten
+      service:
+        name: ssh
+        state: started
+        enabled: yes
+
+    - name: Sta SSH-verkeer toe via de firewall
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
     - name: Update APT repository and cache
       apt:
         update_cache: yes

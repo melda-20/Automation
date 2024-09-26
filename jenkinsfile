@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         TF_VERSION = '1.9.5'
-        ANSIBLE_VERSION = '2.16.11'
+        ANSIBLE_VERSION = '2.16.11' 
         SECRETS_PATH = '/var/lib/jenkins/secrets/secrets.tfvars'
     }
 
@@ -47,20 +47,14 @@ pipeline {
         stage('Run Ansible Playbook: apache_webserver') {
             steps {
                 script {
-                    // Haal de SSH private key op uit secrets.tfvars en sla deze op in een bestand
-                    SSH_PRIVATE_KEY = sh(script: "grep 'ssh_private_key' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
-                    
-                    // Schrijf de private key naar een tijdelijk bestand
-                    writeFile file: 'ssh_private_key.pem', text: SSH_PRIVATE_KEY
-                    
-                    // Maak het key-bestand leesbaar alleen voor de eigenaar
-                    sh 'chmod 600 ssh_private_key.pem'
-                    
-                    // Voer het Ansible-playbook uit met de SSH private key
+                    // Haal het wachtwoord van de gebruiker op uit secrets.tfvars
+                    SSH_USER_PASSWORD = sh(script: "grep 'ssh_user_password' secrets.tfvars | cut -d'=' -f2 | tr -d '\"'", returnStdout: true).trim()
+
+                    // Voer het Ansible-playbook uit met wachtwoord authenticatie
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
-                    --private-key ssh_private_key.pem \
-                    -u student
+                    -u student \
+                    --extra-vars "ssh_user_password=${SSH_USER_PASSWORD}"
                     """
                 }
             }
