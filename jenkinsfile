@@ -49,9 +49,7 @@ pipeline {
                 script {
                     sh """
                     ansible-playbook -i ${VM_IP}, apache_webserver.yml \
-                    --private-key /var/lib/jenkins/.ssh/id_rsa \
-                    -u student \
-                    -e 'ansible_ssh_extra_args="-o StrictHostKeyChecking=no"'
+                    --extra-vars "ansible_user=student ansible_ssh_pass=student ansible_ssh_extra_args='-o StrictHostKeyChecking=no'"
                     """
                 }
             }
