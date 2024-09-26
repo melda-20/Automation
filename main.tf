@@ -70,12 +70,15 @@ resource "vsphere_virtual_machine" "web-server" {
        }
 
        ipv4_gateway = "10.0.10.1"
-
+       
+      metadata = {
+      ssh_authorized_keys = file(var.ssh_public_keys)
+      }
       # Voeg een aanpassingsscript toe voor SSH-sleutels
-      post_customization_script = <<EOF
-        #!/bin/bash
-        echo "${var.ssh_public_key}" >> /home/student/.ssh/authorized_keys
-      EOF
+      #post_customization_script = <<EOF
+      #  #!/bin/bash
+      #  echo "${var.ssh_public_key}" >> /home/student/.ssh/authorized_keys
+      #EOF
     }
   }
 }
