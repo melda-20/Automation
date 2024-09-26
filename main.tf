@@ -61,7 +61,7 @@ resource "vsphere_virtual_machine" "web-server" {
       linux_options {
         host_name = "web-server"
         domain    = "local"
-        ssh_authorized_keys = var.ssh_public_key
+        #ssh_authorized_keys = var.ssh_public_key
       }
 
        network_interface {
@@ -70,6 +70,12 @@ resource "vsphere_virtual_machine" "web-server" {
        }
 
        ipv4_gateway = "10.0.10.1"
+
+      # Voeg een aanpassingsscript toe voor SSH-sleutels
+      post_customization_script = <<EOF
+        #!/bin/bash
+        echo "${var.ssh_public_key}" >> /home/student/.ssh/authorized_keys
+      EOF
     }
   }
 }
