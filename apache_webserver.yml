@@ -3,8 +3,9 @@
   hosts: all
   become: yes
   vars:
-    ansible_ssh_pass: "{{ ssh_user_password }}"
-    ansible_become_pass: "{{ ssh_user_password }}"
+    ansible_user: "{{ ssh_user }}"  # Haal SSH-gebruiker op uit variabelen
+    ansible_ssh_pass: "{{ ssh_user_password }}"  # Haal wachtwoord op uit variabelen
+    ansible_become_pass: "{{ ssh_user_password }}"  # Wachtwoord voor sudo
   
   tasks:
     - name: Zorg ervoor dat OpenSSH is geïnstalleerd
