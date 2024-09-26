@@ -81,4 +81,3 @@ resource "vsphere_virtual_machine" "web-server" {
     }
    }
   }
-}
