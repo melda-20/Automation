@@ -61,7 +61,7 @@ resource "vsphere_virtual_machine" "web-server" {
       linux_options {
         host_name = "web-server"
         domain    = "local"
-        ssh_authorized_keys = [var.ssh_public_key]
+        ssh_authorized_keys = var.ssh_public_key
       }
 
        network_interface {
