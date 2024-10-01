@@ -57,7 +57,7 @@ resource "vsphere_virtual_machine" "web-server" {
 
     customize {
       linux_options {
-        host_name = "web-server-test"
+        host_name = "web-server05"
         domain    = "local"
       }
 
