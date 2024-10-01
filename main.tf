@@ -57,16 +57,16 @@ resource "vsphere_virtual_machine" "web-server" {
 
     customize {
       linux_options {
-        host_name = "web-server"
+        host_name = "web-server-test"
         domain    = "local"
       }
 
-       network_interface {
-         ipv4_address = "10.0.10.100"
-         ipv4_netmask = 24
-       }
+       #network_interface {
+       #  ipv4_address = "10.0.10.100"
+       #  ipv4_netmask = 24
+       #}
 
-       ipv4_gateway = "10.0.10.1"
+       ipv4_gateway = "10.0.20.1"
     }
    }
   }
