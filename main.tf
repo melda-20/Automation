@@ -43,7 +43,7 @@ resource "null_resource" "generate_name" {
 }
 
 locals {
-  vm_name = trim(file("vm_name.txt"))
+  vm_name = trim(file("vm_name.txt"), " ")
 }
 
 # Resource voor de VM creatie
