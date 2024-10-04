@@ -29,11 +29,29 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+resource "null_resource" "generate_name" {
+  provisioner "local-exec" {
+    environment = {
+      VSPHERE_URL      = var.url_vsphere
+      VSPHERE_USERNAME = var.username_vsphere
+      VSPHERE_PASSWORD = var.password_vsphere
+    }
+    command = "bash generate_name.sh > vm_name.txt"
+  }
+
+  depends_on = [data.vsphere_datacenter.dc]
+}
+
+locals {
+  vm_name = trim(file("vm_name.txt"))
+}
+
+# Resource voor de VM creatie
 resource "vsphere_virtual_machine" "web-server" {
-  name             = var.vsphere_virtual_machine_name
+  name             = local.vm_name
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
-  folder           = "${var.vsphere_folder_path}"
+  folder           = var.vsphere_folder_path
 
   num_cpus = data.vsphere_virtual_machine.template.num_cpus
   memory   = data.vsphere_virtual_machine.template.memory
@@ -57,16 +75,15 @@ resource "vsphere_virtual_machine" "web-server" {
 
     customize {
       linux_options {
-        host_name = "Web05"
+        host_name = local.vm_name
         domain    = "local"
       }
 
-       network_interface {
-         ipv4_address = "10.0.20.100"
-         ipv4_netmask = 24
-       }
+      network_interface {
+        ipv4_netmask = 24
+      }
 
-       ipv4_gateway = "10.0.20.1"
+      ipv4_gateway = "10.0.20.1"
     }
-   }
   }
+}
