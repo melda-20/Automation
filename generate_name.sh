@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Set the path to the tracking file
 TRACKING_FILE="used_vm_names.txt"
 
@@ -13,12 +14,14 @@ for i in {1..100}; do
   
   # Check if the VM name is in the tracking file
   if ! grep -qx "$VM_NAME" "$TRACKING_FILE"; then
-    echo "Selected name: $VM_NAME"
-    echo "$VM_NAME" >> "$TRACKING_FILE"
+    # Echo only the JSON output, nothing else
     echo "{\"name\": \"$VM_NAME\"}"
+    # Append the selected name to the tracking file
+    echo "$VM_NAME" >> "$TRACKING_FILE"
     exit 0
   fi
 done
 
+# Output an error in JSON format if no name is available
 echo "{\"error\": \"No available VM names\"}"
 exit 1
