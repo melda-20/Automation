@@ -6,7 +6,7 @@ export GOVC_INSECURE=true
 
 # Specify the folder where you want to search for existing VMs
 # Replace "YourFolderPath" with the actual path to your folder in vSphere, e.g., "/datacenter/vm/your-folder"
-FOLDER_PATH="_Courses/I3-DB01/I483725/Automation"
+FOLDER_PATH="/Netlab-DC/vm/_Courses/I3-DB01/I483725/Automation"
 
 for i in {1..100}; do
   # Check if a VM with the name exists in the specified folder
