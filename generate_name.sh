@@ -1,22 +1,24 @@
 #!/bin/bash
-export GOVC_URL="$VSPHERE_URL"
-export GOVC_USERNAME="$VSPHERE_USERNAME"
-export GOVC_PASSWORD="$VSPHERE_PASSWORD"
-export GOVC_INSECURE=true
+# Set the path to the tracking file
+TRACKING_FILE="used_vm_names.txt"
 
-# Specify the folder where you want to search for existing VMs
-# Replace "YourFolderPath" with the actual path to your folder in vSphere, e.g., "/datacenter/vm/your-folder"
-FOLDER_PATH="/Netlab-DC/vm/_Courses/I3-DB01/I483725/Automation"
+# Create the tracking file if it does not exist
+if [ ! -f "$TRACKING_FILE" ]; then
+  touch "$TRACKING_FILE"
+fi
 
+# Loop through potential VM names and find the first available one
 for i in {1..100}; do
-  # Check if a VM with the name exists in the specified folder
-  if ! govc vm.info -folder "$FOLDER_PATH" "webserver$i" &> /dev/null; then
-    # Output the result in JSON format required by Terraform's external data source
-    echo "{\"name\": \"webserver$i\"}"
+  VM_NAME="webserver$i"
+  
+  # Check if the VM name is in the tracking file
+  if ! grep -qx "$VM_NAME" "$TRACKING_FILE"; then
+    echo "Selected name: $VM_NAME"
+    echo "$VM_NAME" >> "$TRACKING_FILE"
+    echo "{\"name\": \"$VM_NAME\"}"
     exit 0
   fi
 done
 
-# In case no name is available, return an error
-echo "{\"error\": \"No available VM names in folder $FOLDER_PATH\"}"
+echo "{\"error\": \"No available VM names\"}"
 exit 1
