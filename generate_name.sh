@@ -6,7 +6,7 @@ export GOVC_INSECURE=true
 
 for i in {1..100}; do
   if ! govc vm.info "webserver$i" &> /dev/null; then
-    echo "webserver$i"
-    break
+    echo "{\"name\": \"webserver$i\"}"
+    exit 0
   fi
 done

@@ -29,24 +29,19 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-resource "null_resource" "generate_name" {
-  provisioner "local-exec" {
-    environment = {
-      VSPHERE_URL      = var.url_vsphere
-      VSPHERE_USERNAME = var.username_vsphere
-      VSPHERE_PASSWORD = var.password_vsphere
-    }
-    command = "bash generate_name.sh > vm_name.txt"
-  }
+# Use external data source to run the Bash script and capture the VM name
+data "external" "generate_vm_name" {
+  program = ["bash", "generate_name.sh"]
 
-  depends_on = [data.vsphere_datacenter.dc]
+  # No inputs are needed for this script, so we provide an empty map
+  query = {}
 }
 
+# Use the result of the external data source for the VM name
 locals {
-  vm_name = trim(file("vm_name.txt"), " ")
+  vm_name = data.external.generate_vm_name.result.name
 }
 
-# Resource voor de VM creatie
 resource "vsphere_virtual_machine" "web-server" {
   name             = local.vm_name
   resource_pool_id = data.vsphere_resource_pool.pool.id
