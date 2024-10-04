@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Set the path to the tracking file
-TRACKING_FILE="used_vm_names.txt"
+# Set the path to a persistent tracking file
+TRACKING_FILE="/var/lib/jenkins/used_vm_names.txt"
 
 # Create the tracking file if it does not exist
 if [ ! -f "$TRACKING_FILE" ]; then
@@ -14,14 +14,17 @@ for i in {1..100}; do
   
   # Check if the VM name is in the tracking file
   if ! grep -qx "$VM_NAME" "$TRACKING_FILE"; then
-    # Echo only the JSON output, nothing else
+    # Output the selected VM name in JSON format for Terraform
     echo "{\"name\": \"$VM_NAME\"}"
-    # Append the selected name to the tracking file
+    
+    # Append the selected name to the tracking file to mark it as used
     echo "$VM_NAME" >> "$TRACKING_FILE"
+    
+    # Exit after assigning the name
     exit 0
   fi
 done
 
-# Output an error in JSON format if no name is available
+# If no available names are found, output an error message in JSON format
 echo "{\"error\": \"No available VM names\"}"
 exit 1
