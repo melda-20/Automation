@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Zabbix Agent
-  hosts: 10.0.10.110
+  hosts: all
   become: yes
   tasks:
 
