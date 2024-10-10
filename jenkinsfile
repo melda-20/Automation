@@ -54,6 +54,28 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Ansible Playbook: Install Zabbix Agent') {
+            steps {
+                script {
+                    sh """
+                    ansible-playbook -i ${VM_IP}, install_zabbix_agent.yml \
+                    --extra-vars "ansible_user=student ansible_ssh_pass=student ansible_become_pass=student ansible_ssh_extra_args='-o StrictHostKeyChecking=no'"
+                    """
+                }
+            }
+        }
+
+        stage('Run Ansible Playbook: Add to Zabbix') {
+            steps {
+                script {
+                    sh """
+                    ansible-playbook -i localhost, add_webserver_to_zabbix.yml \
+                    --extra-vars "ansible_user=student ansible_ssh_pass=student ansible_become_pass=student ansible_ssh_extra_args='-o StrictHostKeyChecking=no' zabbix_server_ip=10.0.10.7 vm_ip=${VM_IP}"
+                    """
+                }
+            }
+        }
     }
 
     post {

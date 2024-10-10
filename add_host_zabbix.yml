@@ -1,0 +1,33 @@
+---
+- name: Add web server to Zabbix
+  hosts: localhost
+  gather_facts: no
+  vars:
+    zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
+    zabbix_api_user: "Admin (Zabbix Administrator)"
+    zabbix_api_password: "Zabbix"
+    webserver_ip: "{{ hostvars[inventory_hostname].ansible_host }}"
+    webserver_name: "{{ inventory_hostname }}"
+    zabbix_host_group: "Web Servers"
+    zabbix_template: "Template OS Linux"
+
+  tasks:
+    - name: Create host in Zabbix
+      community.zabbix.zabbix_host:
+        url: "{{ zabbix_api_url }}"
+        login_user: "{{ zabbix_api_user }}"
+        login_password: "{{ zabbix_api_password }}"
+        host_name: "{{ webserver_name }}"
+        visible_name: "{{ webserver_name }}"
+        host_groups:
+          - "{{ zabbix_host_group }}"
+        interfaces:
+          - type: 1
+            main: 1
+            use_ip: 1
+            ip: "{{ webserver_ip }}"
+            dns: ""
+            port: 10050
+        link_templates:
+          - "{{ zabbix_template }}"
+      delegate_to: localhost
