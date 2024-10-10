@@ -4,7 +4,7 @@
   gather_facts: no
   vars:
     zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
-    zabbix_api_token: "82d61674195dbfa3a66607cd17135896454e815ebe92dbfaa82dee5d0ea575e1"  # Voeg hier je Zabbix API-token in
+    zabbix_api_token: "82d61674195dbfa3a66607cd17135896454e815ebe92dbfaa82dee5d0ea575e1"
     webserver_ip: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
     webserver_name: "{{ inventory_hostname }}"
     zabbix_host_group: "Web Servers"
