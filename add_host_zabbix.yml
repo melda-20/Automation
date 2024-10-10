@@ -3,9 +3,9 @@
   hosts: all
   gather_facts: no
   vars:
-    zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
-    zabbix_api_user: "Admin"
-    zabbix_api_password: "Zabbix"
+    zabbix_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
+    zabbix_user: "Admin"
+    zabbix_password: "Zabbix"
     webserver_ip: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
     webserver_name: "{{ inventory_hostname }}"
     zabbix_host_group: "Web Servers"
@@ -14,9 +14,9 @@
   tasks:
     - name: Create host in Zabbix
       community.zabbix.zabbix_host:
-        url: "{{ zabbix_api_url }}"
-        login_user: "{{ zabbix_api_user }}"
-        login_password: "{{ zabbix_api_password }}"
+        zabbix_url: "{{ zabbix_url }}"
+        zabbix_user: "{{ zabbix_user }}"
+        zabbix_password: "{{ zabbix_password }}"
         host_name: "{{ webserver_name }}"
         visible_name: "{{ webserver_name }}"
         host_groups:
