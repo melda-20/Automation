@@ -16,21 +16,26 @@
     ansible_httpapi_validate_certs: false  # Change to true if using a valid SSL certificate
 
   tasks:
+    - name: Set credentials for Zabbix API
+      ansible.builtin.set_fact:
+        ansible_user: "{{ http_login_user }}"
+        ansible_httpapi_pass: "{{ http_login_password }}"
+
     - name: Create host in Zabbix
       community.zabbix.zabbix_host:
         host_name: "{{ webserver_name }}"
         visible_name: "{{ webserver_name }}"
         host_groups:
           - "{{ zabbix_host_group }}"
+        link_templates:
+          - "{{ zabbix_template }}"
         interfaces:
           - type: 1  # Agent interface
-            main: true
-            useip: true
+            main: 1
+            useip: 1
             ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
-        link_templates:
-          - "{{ zabbix_template }}"
       delegate_to: localhost
       environment:
         ZABBIX_URL: "{{ zabbix_api_url }}"
