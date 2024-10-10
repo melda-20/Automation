@@ -3,7 +3,7 @@
   hosts: all
   become: yes
   tasks:
-  
+
     - name: Add Zabbix repository GPG key
       apt_key:
         url: 'https://repo.zabbix.com/zabbix-official-repo.key'
@@ -11,9 +11,9 @@
 
     - name: Add Zabbix repository
       apt_repository:
-      repo: 'deb http://repo.zabbix.com/zabbix/7.0/ubuntu {{ ansible_distribution_release }} main'
-      state: present
-      update_cache: yes
+        repo: 'deb http://repo.zabbix.com/zabbix/7.0/ubuntu {{ ansible_distribution_release }} main'
+        state: present
+        update_cache: yes
 
     - name: Install Zabbix agent
       apt:
