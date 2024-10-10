@@ -36,3 +36,5 @@
             ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
+      environment:
+        ZABBIX_URL: "{{ zabbix_api_url }}"
