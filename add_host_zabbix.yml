@@ -9,10 +9,6 @@
     webserver_name: "{{ inventory_hostname }}"
     zabbix_host_group: "Web Servers"
     zabbix_template: "Template OS Linux"
-    ansible_network_os: community.zabbix.zabbix
-    ansible_connection: httpapi
-    ansible_httpapi_use_ssl: false  # Zet op true als je HTTPS gebruikt
-    ansible_httpapi_validate_certs: false  # Zet op true als je een geldig SSL-certificaat gebruikt
 
   tasks:
     - name: Set Zabbix API token
@@ -21,7 +17,6 @@
 
     - name: Create host in Zabbix using API token
       community.zabbix.zabbix_host:
-        url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
         host_name: "{{ webserver_name }}"
         visible_name: "{{ webserver_name }}"
         host_groups:
@@ -35,3 +30,5 @@
             ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
+      environment:
+        ZABBIX_URL: "{{ zabbix_api_url }}"
