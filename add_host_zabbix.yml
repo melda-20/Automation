@@ -22,12 +22,12 @@
         host_groups:
           - "{{ zabbix_host_group }}"
         interfaces:
-          - type: 1
-            main: 1
-            use_ip: 1
+          - type: 1  # Agent interface
+            main: true
+            useip: true
             ip: "{{ webserver_ip }}"
             dns: ""
-            port: 10050
+            port: "10050"
         link_templates:
           - "{{ zabbix_template }}"
       delegate_to: localhost
