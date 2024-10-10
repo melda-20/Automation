@@ -10,12 +10,14 @@
     webserver_name: "{{ inventory_hostname }}"
     zabbix_host_group: "Web Servers"
     zabbix_template: "Template OS Linux"
+    ansible_network_os: community.zabbix.zabbix
+    ansible_connection: httpapi
+    ansible_httpapi_use_ssl: false  # Set to true if using HTTPS
+    ansible_httpapi_validate_certs: false  # Change to true if using a valid SSL certificate
 
   tasks:
     - name: Create host in Zabbix
       community.zabbix.zabbix_host:
-        http_login_user: "{{ http_login_user }}"
-        http_login_password: "{{ http_login_password }}"
         host_name: "{{ webserver_name }}"
         visible_name: "{{ webserver_name }}"
         host_groups:
