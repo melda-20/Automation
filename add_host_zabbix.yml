@@ -1,6 +1,6 @@
 ---
 - name: Add web server to Zabbix
-  hosts: all
+  hosts: localhost
   gather_facts: no
   vars:
     zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
@@ -36,6 +36,3 @@
             ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
-      delegate_to: localhost
-      environment:
-        ZABBIX_URL: "{{ zabbix_api_url }}"
