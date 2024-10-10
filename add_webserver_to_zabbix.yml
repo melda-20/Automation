@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Zabbix Agent
-  hosts: webservers
+  hosts: all
   become: yes
   tasks:
     - name: Add Zabbix repository

@@ -1,6 +1,6 @@
 ---
 - name: Add web server to Zabbix
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
