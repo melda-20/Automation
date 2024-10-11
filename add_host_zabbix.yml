@@ -5,19 +5,23 @@
   vars:
     zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
     zabbix_api_token: "82d61674195dbfa3a66607cd17135896454e815ebe92dbfaa82dee5d0ea575e1"
-    webserver_ip: "{{ webserver_ip | default(inventory_hostname) }}"
-    webserver_name: "{{ webserver_name | default(inventory_hostname) }}"  
+    webserver_ip: "{{ webserver_ip }}"
+    webserver_name: "{{ webserver_name }}"
     zabbix_host_group: "Linux servers"
     zabbix_template: "Template OS Linux"
 
   tasks:
+    - name: Debug variables
+      debug:
+        msg: "Webserver IP: {{ webserver_ip }}, Webserver Name: {{ webserver_name }}"
+
     - name: Set Zabbix API token
       ansible.builtin.set_fact:
         ansible_zabbix_auth_key: "{{ zabbix_api_token }}"
 
     - name: Create host in Zabbix using API token
       community.zabbix.zabbix_host:
-        host_name: "{{ webserver_name }}"  # Use the name passed from the command line
+        host_name: "{{ webserver_name }}"
         visible_name: "{{ webserver_name }}"
         host_groups:
           - "{{ zabbix_host_group }}"
@@ -27,7 +31,7 @@
           - type: 1  # Agent interface
             main: 1
             useip: 1
-            ip: "{{ webserver_ip }}"  # Use the IP passed from the command line
+            ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
       environment:
