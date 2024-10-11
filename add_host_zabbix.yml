@@ -1,9 +1,9 @@
 ---
 - name: Add web server to Zabbix
-  hosts: all
+  hosts: localhost
   gather_facts: no
   vars:
-    zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
+    #zabbix_api_url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
     zabbix_api_token: "82d61674195dbfa3a66607cd17135896454e815ebe92dbfaa82dee5d0ea575e1"
     webserver_ip: "{{ webserver_ip }}"
     webserver_name: "{{ webserver_name }}"
@@ -19,20 +19,38 @@
       ansible.builtin.set_fact:
         ansible_zabbix_auth_key: "{{ zabbix_api_token }}"
 
+    # - name: Create host in Zabbix using API token
+    #   community.zabbix.zabbix_host:
+    #     host_name: "{{ webserver_name }}"
+    #     visible_name: "{{ webserver_name }}"
+    #     host_groups:
+    #       - "{{ zabbix_host_group }}"
+    #     link_templates:
+    #       - "{{ zabbix_template }}"
+    #     interfaces:
+    #       - type: 1  # Agent interface
+    #         main: 1
+    #         useip: 1
+    #         ip: "{{ webserver_ip }}"
+    #         dns: ""
+    #         port: "10050"
+    #   environment:
+    #     ZABBIX_URL: "{{ zabbix_api_url }}"
+
     - name: Create host in Zabbix using API token
       community.zabbix.zabbix_host:
-        host_name: "{{ webserver_name }}"
-        visible_name: "{{ webserver_name }}"
-        host_groups:
-          - "{{ zabbix_host_group }}"
-        link_templates:
-          - "{{ zabbix_template }}"
+        url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
+        auth: "{{ zabbix_api_token }}"
+        state: present
+        host: "{{ webserver_name }}"
         interfaces:
-          - type: 1  # Agent interface
+          - type: 1
             main: 1
             useip: 1
             ip: "{{ webserver_ip }}"
             dns: ""
             port: "10050"
-      environment:
-        ZABBIX_URL: "{{ zabbix_api_url }}"
+      register: zabbix_host_result
+
+    - debug:
+        var: zabbix_host_result
