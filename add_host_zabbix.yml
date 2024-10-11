@@ -42,7 +42,7 @@
         url: "http://10.0.10.7/zabbix/api_jsonrpc.php"
         auth: "{{ zabbix_api_token }}"
         state: present
-        host: "{{ webserver_name }}"
+        host_name: "{{ webserver_name }}"
         interfaces:
           - type: 1
             main: 1
