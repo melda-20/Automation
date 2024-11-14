@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Formulier</title>
+</head>
+<body>
+    <h1>Onboarding Formulier</h1>
+    <form method="post">
+        <label>Voornaam:</label><br>
+        <input type="text" name="given_name" required><br><br>
+
+        <label>Tussenvoegsel (optioneel):</label><br>
+        <input type="text" name="middle_name"><br><br>
+
+        <label>Achternaam:</label><br>
+        <input type="text" name="last_name" required><br><br>
+
+        <label>Geboortedatum (dd-mm-jjjj):</label><br>
+        <input type="text" name="birth_date" required><br><br>
+
+        <label>Afdeling:</label><br>
+        <select name="department" required>
+            <option value="IT">IT</option>
+            <option value="HR">HR</option>
+            <option value="Sales">Sales</option>
+        </select><br><br>
+
+        <input type="submit" value="Versturen">
+    </form>
+</body>
+</html>
