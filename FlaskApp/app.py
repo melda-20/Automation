@@ -38,12 +38,16 @@ def onboarding_form():
                 text=True
             )
             flash("Het Ansible playbook is succesvol uitgevoerd!", "success")
+            print(result.stdout)  # Print de standaarduitvoer van het playbook
         except subprocess.CalledProcessError as e:
             flash(f"Er is een fout opgetreden bij het uitvoeren van het Ansible playbook: {e.stderr}", "danger")
+            print(e.stderr)  # Print de foutuitvoer voor debugging
+
 
         return redirect(url_for('onboarding_form'))
 
     return render_template('form.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
