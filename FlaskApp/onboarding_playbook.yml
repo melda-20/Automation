@@ -2,10 +2,11 @@
 - name: Onboarding new employee
   hosts: windows
   vars:
-    employee_password: "SecurePassword123!"  # Je kunt dit wachtwoord aanpassen naar wens.
+    employee_password: "SecurePassword123!"  # Customize this password as needed.
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-    department_group: "{{ department }}"
+    department_group: "{{ department }}"  # Variable to handle dynamic department group selection
+
   tasks:
     - name: Create new AD user
       ansible.windows.win_domain_user:
@@ -20,15 +21,17 @@
         groups:
           - "{{ department_group }}"
 
-    - name: Add user to department-specific group
+    - name: Ensure user is a member of the department-specific group
       ansible.windows.win_group_membership:
         name: "{{ department_group }}"
         members:
           - "{{ employee_name }}"
         state: present
+        membership: add  # Ensures the user is added without removing existing members
 
+    # Optional task for installing department-specific software
     #- name: Install department-specific software
     #  ansible.windows.win_package:
-    #    path: "\\\\path\\to\\software_installer.exe"  # Pas dit pad aan naar de locatie van je installer.
+    #    path: "\\\\path\\to\\software_installer.exe"  # Update this path to your installer location.
     #    arguments: "/silent"
     #    state: present

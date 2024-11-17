@@ -15,6 +15,11 @@ def onboarding_form():
         birth_date = request.form['birth_date']
         department = request.form['department']
 
+        # Valideer of de afdeling correct is (IT of HR)
+        if department not in ['IT', 'HR']:
+            flash("Ongeldige afdeling geselecteerd. Kies IT of HR.", "danger")
+            return redirect(url_for('onboarding_form'))
+
         # Maak een dictionary voor de variabelen
         variables = {
             'given_name': given_name,
@@ -43,11 +48,9 @@ def onboarding_form():
             flash(f"Er is een fout opgetreden bij het uitvoeren van het Ansible playbook: {e.stderr}", "danger")
             print(e.stderr)  # Print de foutuitvoer voor debugging
 
-
         return redirect(url_for('onboarding_form'))
 
     return render_template('form.html')
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
