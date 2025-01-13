@@ -16,7 +16,7 @@ def onboarding_form():
         department = request.form['department']
 
         # Valideer of de afdeling correct is (IT of HR)
-        if department not in ['IT', 'HR']:
+        if department not in ['IT department', 'HR department']:
             flash("Ongeldige afdeling geselecteerd. Kies IT of HR.", "danger")
             return redirect(url_for('onboarding_form'))
 
