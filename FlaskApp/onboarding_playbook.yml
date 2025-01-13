@@ -6,9 +6,10 @@
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
     department_group: "{{ department }}"
+    ou_path: "OU={{ department }},OU=Departments,DC=melmel,DC=local"
   
   tasks:
-    - name: Create new AD user using PowerShell
+    - name: Create new AD user in correct OU using PowerShell
       win_shell: |
         $password = ConvertTo-SecureString -AsPlainText -Force "{{ employee_password }}"
         New-ADUser -Name "{{ display_name }}" `
@@ -19,7 +20,8 @@
                    -AccountPassword $password `
                    -PasswordNeverExpires $true `
                    -Enabled $true `
-                   -Description "New employee in {{ department }}"
+                   -Description "New employee in {{ department }}" `
+                   -Path "{{ ou_path }}"
 
     - name: Add user to department-specific group using PowerShell
       win_shell: |
