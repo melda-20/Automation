@@ -26,7 +26,6 @@
         Add-ADGroupMember -Identity "{{ department_group }}" -Members "{{ employee_name }}"
 
 
-# ---
 # - name: Onboarding new employee
 #   hosts: windows
 #   vars:
