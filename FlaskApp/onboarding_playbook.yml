@@ -2,32 +2,60 @@
 - name: Onboarding new employee
   hosts: windows
   vars:
-    employee_password: "SecurePassword123!"  # Customize this password as needed.
+    employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-    department_group: "{{ department }}"  # Variable to handle dynamic department group selection
-
+    department_group: "{{ department }}"
+  
   tasks:
-    - name: Create new AD user
-      ansible.windows.win_domain_user:
-        name: "{{ employee_name }}"
-        user_password: "{{ employee_password }}"
-        state: present
-        password_never_expires: yes
-        given_name: "{{ given_name }}"
-        surname: "{{ last_name }}"
-        display_name: "{{ display_name }}"
-        description: "New employee in {{ department }}"
-        groups:
-          - "{{ department_group }}"
+    - name: Create new AD user using PowerShell
+      win_shell: |
+        $password = ConvertTo-SecureString -AsPlainText -Force "{{ employee_password }}"
+        New-ADUser -Name "{{ display_name }}" `
+                   -GivenName "{{ given_name }}" `
+                   -Surname "{{ last_name }}" `
+                   -SamAccountName "{{ employee_name }}" `
+                   -UserPrincipalName "{{ employee_name }}@yourdomain.local" `
+                   -AccountPassword $password `
+                   -PasswordNeverExpires $true `
+                   -Enabled $true `
+                   -Description "New employee in {{ department }}"
 
-    - name: Ensure user is a member of the department-specific group
-      ansible.windows.win_group_membership:
-        name: "{{ department_group }}"
-        members:
-          - "{{ employee_name }}"
-        state: present
-        membership: add  # Ensures the user is added without removing existing members
+    - name: Add user to department-specific group using PowerShell
+      win_shell: |
+        Add-ADGroupMember -Identity "{{ department_group }}" -Members "{{ employee_name }}"
+
+
+# ---
+# - name: Onboarding new employee
+#   hosts: windows
+#   vars:
+#     employee_password: "SecurePassword123!"  # Customize this password as needed.
+#     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
+#     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
+#     department_group: "{{ department }}"  # Variable to handle dynamic department group selection
+
+#   tasks:
+#     - name: Create new AD user
+#       ansible.windows.win_domain_user:
+#         name: "{{ employee_name }}"
+#         user_password: "{{ employee_password }}"
+#         state: present
+#         password_never_expires: yes
+#         given_name: "{{ given_name }}"
+#         surname: "{{ last_name }}"
+#         display_name: "{{ display_name }}"
+#         description: "New employee in {{ department }}"
+#         groups:
+#           - "{{ department_group }}"
+
+#     - name: Ensure user is a member of the department-specific group
+#       ansible.windows.win_group_membership:
+#         name: "{{ department_group }}"
+#         members:
+#           - "{{ employee_name }}"
+#         state: present
+#         membership: add  # Ensures the user is added without removing existing members
 
     # Optional task for installing department-specific software
     #- name: Install department-specific software
