@@ -5,7 +5,7 @@
   tasks:
     - name: Deploy VM
       community.vmware.vmware_guest:
-        hostname: "192.168.200.24"
+        hostname: "vcenter.netlab.fontysict.nl"
         username: "i483725@student.fontys.nl"
         password: "DF242hv[!"
         validate_certs: False
