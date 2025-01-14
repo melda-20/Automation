@@ -32,43 +32,43 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
 
-    # - name: Add user to department-specific group using PowerShell
-    #   win_shell: |
-    #     Add-ADGroupMember -Identity "{{ department_group }}" -Members "{{ employee_name }}"
+    - name: Deploy VM for new user
+      community.vmware.vmware_guest:
+        hostname: "vcenter.netlab.fontysict.nl"
+        username: "i483724@student.fontys.nl"
+        password: "DF242hv[!"
+        validate_certs: no
+        datacenter: "Netlab-DC"
+        cluster: "NIM01-I3-DB"
+        template: "Win10"
+        name: "{{ employee_name }}-VM"
+        power_on: yes
+        networks:
+          - name: "2719_I483725_PVlanB"
+            type: "dhcp"
+        disk:
+          - size_gb: 50
+            type: "thin"
+            datastore: "NIM01-I3-DB"
+        hardware:
+          memory_mb: 4096
+          num_cpus: 2
 
-# - name: Onboarding new employee
-#   hosts: windows
-#   vars:
-#     employee_password: "SecurePassword123!"  # Customize this password as needed.
-#     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
-#     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-#     department_group: "{{ department }}"  # Variable to handle dynamic department group selection
+    - name: Wait for VM to boot and get an IP address
+      wait_for:
+        host: "{{ employee_name }}-VM"
+        port: 5985
+        timeout: 300
 
-#   tasks:
-#     - name: Create new AD user
-#       ansible.windows.win_domain_user:
-#         name: "{{ employee_name }}"
-#         user_password: "{{ employee_password }}"
-#         state: present
-#         password_never_expires: yes
-#         given_name: "{{ given_name }}"
-#         surname: "{{ last_name }}"
-#         display_name: "{{ display_name }}"
-#         description: "New employee in {{ department }}"
-#         groups:
-#           - "{{ department_group }}"
+    - name: Add VM to inventory
+      add_host:
+        name: "{{ employee_name }}-VM"
+        groups: windows
 
-#     - name: Ensure user is a member of the department-specific group
-#       ansible.windows.win_group_membership:
-#         name: "{{ department_group }}"
-#         members:
-#           - "{{ employee_name }}"
-#         state: present
-#         membership: add  # Ensures the user is added without removing existing members
-
-    # Optional task for installing department-specific software
-    #- name: Install department-specific software
-    #  ansible.windows.win_package:
-    #    path: "\\\\path\\to\\software_installer.exe"  # Update this path to your installer location.
-    #    arguments: "/silent"
-    #    state: present
+    - name: Install department-specific software
+      win_shell: |
+        if ("{{ department }}" -eq "IT department") {
+          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\Wireshark-win64-4.0.17.msi" -ArgumentList "/silent" -Wait
+        } elseif ("{{ department }}" -eq "HR department") {
+          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
+        }
