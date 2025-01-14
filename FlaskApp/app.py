@@ -1,10 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+import subprocess
+import logging
 import yaml
 import subprocess
 import os
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Nodig voor flash-meldingen
+app.secret_key = 'supersecretkey'
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def onboarding_form():
@@ -14,13 +20,12 @@ def onboarding_form():
         last_name = request.form['last_name']
         birth_date = request.form['birth_date']
         department = request.form['department']
-
-        # Valideer of de afdeling correct is (IT of HR)
+        # Validate department
         if department not in ['IT department', 'HR department']:
-            flash("Ongeldige afdeling geselecteerd. Kies IT of HR.", "danger")
+            flash("Invalid department selected. Choose IT or HR.", "danger")
             return redirect(url_for('onboarding_form'))
 
-        # Maak een dictionary voor de variabelen
+        # Save variables to YAML
         variables = {
             'given_name': given_name,
             'middle_name': middle_name,
@@ -29,24 +34,35 @@ def onboarding_form():
             'department': department
         }
 
-        # Sla de variabelen op in een bestand (bijv. vars.yml)
         with open('vars.yml', 'w') as file:
             yaml.dump(variables, file)
 
-        # Voer het Ansible-playbook uit
+        # Run Ansible playbook
         try:
-            result = subprocess.run(
+            result = subprocess.Popen(
                 ['ansible-playbook', '-i', 'inventory.ini', 'onboarding_playbook.yml', '-e', '@vars.yml'],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
-            flash("Het Ansible playbook is succesvol uitgevoerd!", "success")
-            print(result.stdout)  # Print de standaarduitvoer van het playbook
-        except subprocess.CalledProcessError as e:
-            flash(f"Er is een fout opgetreden bij het uitvoeren van het Ansible playbook: {e.stderr}", "danger")
-            print(e.stderr)  # Print de foutuitvoer voor debugging
+
+            # Stream logs in real-time
+            for line in iter(result.stdout.readline, ''):
+                logger.info(line.strip())
+                print(line.strip())  # Optional: print to console
+
+            result.stdout.close()
+            result.wait()
+
+            if result.returncode == 0:
+                flash("Ansible playbook executed successfully!", "success")
+            else:
+                flash(f"Ansible playbook failed with code {result.returncode}. Check logs for details.", "danger")
+
+        except Exception as e:
+            logger.error(f"Error executing playbook: {e}")
+            flash(f"An error occurred: {e}", "danger")
 
         return redirect(url_for('onboarding_form'))
 
