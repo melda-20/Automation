@@ -10,7 +10,7 @@
         password: "DF242hv[!"
         validate_certs: False
         name: "Test-VM"
-        template: "/_Courses/I3-DB01/I483725/Orchestration/Win10"
+        template: "Win10" #"/_Courses/I3-DB01/I483725/Orchestration/Win10"
         datacenter: "Netlab-DC"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
         state: "poweredon"
