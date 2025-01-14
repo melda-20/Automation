@@ -32,17 +32,16 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
 
-    - name: Deploy VM for new user
+    - name: Deploy VM
       community.vmware.vmware_guest:
         hostname: "vcenter.netlab.fontysict.nl"
         username: "i483725@student.fontys.nl"
         password: "DF242hv[!"
         validate_certs: no
         datacenter: "Netlab-DC"
-        folder: "/_Courses/I3-DB01/I483725/Orchestration"  # Folder where the VM will be created
-        #cluster: "NIM01-I3-DB"
-        template: "/_Courses/I3-DB01/I483725/Orchestration/Win10"  # Path to your VM template
-        name: "{{ employee_name }}-VM"
+        folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        template: "/_Courses/I3-DB01/I483725/Win10"
+        name: "Test-VM"
         power_on: yes
         networks:
           - name: "2719_I483725_PVlanB"
