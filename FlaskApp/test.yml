@@ -1,4 +1,7 @@
 ---
+- name: Onboarding new employee
+  hosts: windows
+  
   Tasks:
     - name: Deploy VM
       community.vmware.vmware_guest:
