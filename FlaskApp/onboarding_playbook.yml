@@ -33,7 +33,7 @@
         }
 
     - name: Deploy VM
-      vmware_guest:
+      community.vmare.vmware_guest:
         hostname: "192.168.200.24"
         username: "I483725@fontysict.nl"
         password: "DF242hv[!"
