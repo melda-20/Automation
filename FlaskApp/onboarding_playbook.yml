@@ -39,7 +39,7 @@
         password: "DF242hv[!"
         validate_certs: no
         datacenter: "Netlab-DC"
-        cluster: "NIM01-I3-DB"
+        #cluster: "NIM01-I3-DB"
         template: "Win10"
         name: "{{ employee_name }}-VM"
         power_on: yes
