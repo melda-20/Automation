@@ -4,7 +4,7 @@
   
   tasks:
     - name: Deploy VM
-      community.vmware.vmware_guest:
+      vmware_guest:
         hostname: "vcenter.netlab.fontysict.nl"
         username: "I483725@fontysict.nl"
         password: "DF242hv[!"
@@ -12,6 +12,7 @@
         name: "Test-VM"
         template: "Win10" #"/_Courses/I3-DB01/I483725/Orchestration/Win10"
         datacenter: "Netlab-DC"
+        datastore: "DataCluster-Students"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
         state: "poweredon"
         wait_for_ip_address: no
