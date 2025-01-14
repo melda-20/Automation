@@ -35,7 +35,7 @@
     - name: Deploy VM for new user
       community.vmware.vmware_guest:
         hostname: "vcenter.netlab.fontysict.nl"
-        username: "i483724@student.fontys.nl"
+        username: "i483725@student.fontys.nl"
         password: "DF242hv[!"
         validate_certs: no
         datacenter: "Netlab-DC"
