@@ -36,7 +36,7 @@
       community.vmware.vmware_guest:
         hostname: "vcenter.netlab.fontysict.nl"
         username: "i483725@student.fontys.nl"
-        password: "DF242hv[!"
+        password: "sanannela"
         validate_certs: no
         datacenter: "Netlab-DC"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
