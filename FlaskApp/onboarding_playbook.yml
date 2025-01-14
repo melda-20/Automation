@@ -1,6 +1,6 @@
 ---
 - name: Onboarding new employee
-  hosts: windows
+  hosts: windows, localhost
   vars:
     employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
@@ -33,17 +33,21 @@
         }
 
     - name: Deploy VM
-      community.vmware.vmware_guest:
+      vmware_guest:
         hostname: "192.168.200.24"
-        username: "i483725@student.fontys.nl"
+        username: "I483725@fontysict.nl"
         password: "DF242hv[!"
         validate_certs: False
-        name: "Test-VM"
-        template: "/_Courses/I3-DB01/I483725/Win10"
+        name: "{{ employee_name }}"
+        template: "Win10" #"/_Courses/I3-DB01/I483725/Orchestration/Win10"
         datacenter: "Netlab-DC"
+        datastore: "DataCluster-Students"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        resource_pool: "I483725"
         state: "poweredon"
-        wair_for_ip_address: no
+        wait_for_ip_address: no
+
+
         #networks:
         #  - name: "2719_I483725_PVlanB"
         #    type: "dhcp"
