@@ -41,7 +41,7 @@
         datacenter: "Netlab-DC"
         folder: "/Netlab-DC/_Courses/I3-DB01/I483725/Orchestration"  # Folder where the VM will be created
         #cluster: "NIM01-I3-DB"
-        template: "/Netlab-DC/_Courses/I3-DB01/I483725/Win10"  # Path to your VM template
+        template: "/Netlab-DC/_Courses/I3-DB01/I483725/Orchestration/Win10"  # Path to your VM template
         name: "{{ employee_name }}-VM"
         power_on: yes
         networks:
