@@ -40,7 +40,7 @@ def onboarding_form():
         # Run Ansible playbook
         try:
             result = subprocess.Popen(
-                ['ansible-playbook', '-i', 'inventory.ini', 'onboarding_playbook.yml', '-e', '@vars.yml'],
+                ['ansible-playbook', '-i', 'inventory.ini', 'onboarding_playbook.yml', '-e', '@vars.yml', '-vvvv'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
