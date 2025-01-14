@@ -6,7 +6,7 @@
     - name: Deploy VM
       community.vmware.vmware_guest:
         hostname: "vcenter.netlab.fontysict.nl"
-        username: "i483725@student.fontys.nl"
+        username: "I483725@student.fontys.nl"
         password: "DF242hv[!"
         validate_certs: False
         name: "Test-VM"
