@@ -1,6 +1,6 @@
 ---
 - name: Onboarding new employee
-  hosts: windows
+  hosts: localhost
   
   tasks:
     - name: Deploy VM
