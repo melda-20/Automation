@@ -34,35 +34,36 @@
 
     - name: Deploy VM
       community.vmware.vmware_guest:
-        hostname: "vcenter.netlab.fontysict.nl"
+        hostname: "192.168.200.24"
         username: "i483725@student.fontys.nl"
-        password: "sanannela"
-        validate_certs: no
+        password: "DF242hv[!"
+        validate_certs: False
+        name: "Test-VM"
+        template: "/_Courses/I3-DB01/I483725/Win10"
         datacenter: "Netlab-DC"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
-        template: "/_Courses/I3-DB01/I483725/Win10"
-        name: "Test-VM"
-        power_on: yes
-        networks:
-          - name: "2719_I483725_PVlanB"
-            type: "dhcp"
-        disk:
-          - size_gb: 50
-            type: "thin"
-            datastore: "NIM01-I3-DB"
-        hardware:
-          memory_mb: 4096
-          num_cpus: 2
+        state: "poweredon"
+        wair_for_ip_address: no
+        #networks:
+        #  - name: "2719_I483725_PVlanB"
+        #    type: "dhcp"
+        #disk:
+        #  - size_gb: 50
+        #    type: "thin"
+        #    datastore: "NIM01-I3-DB"
+        #hardware:
+        #  memory_mb: 4096
+        #  num_cpus: 2
 
     - name: Wait for VM to boot and get an IP address
       wait_for:
-        host: "{{ employee_name }}-VM"
+        host: "Test-VM" #"{{ employee_name }}-VM"
         port: 5985
         timeout: 300
 
     - name: Add VM to inventory
       add_host:
-        name: "{{ employee_name }}-VM"
+        name: "Test-VM" #"{{ employee_name }}-VM"
         groups: windows
 
     - name: Install department-specific software
