@@ -2,7 +2,7 @@
 - name: Onboarding new employee
   hosts: windows
   
-  Tasks:
+  tasks:
     - name: Deploy VM
       community.vmware.vmware_guest:
         hostname: "192.168.200.24"
@@ -14,4 +14,4 @@
         datacenter: "Netlab-DC"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
         state: "poweredon"
-        wair_for_ip_address: no
+        wait_for_ip_address: no
