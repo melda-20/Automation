@@ -62,9 +62,9 @@
     #   when: vm_info.instance.ip_address is defined
 
     - name: Wait for VM to boot and connect
-      wait_for_connection:
-        hosts: "{{ vm_info.instance.ip_address }}"
-        timeout: 300
+      ansible.builtin.wait_for_connection:
+        host: "{{ vm_info.instance.ip_address }}"
+        timeout: 600
         delay: 30
 
     - name: Set VM hostname
