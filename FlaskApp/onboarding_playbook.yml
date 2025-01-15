@@ -82,28 +82,7 @@
         vm_ip: "{{ vm_info.instance.ipv4 }}"
       when: vm_info.instance.ipv4 is defined
 
-    - name: Set VM hostname
+    - name: Set VM hostname and DNS name
       win_hostname:
-        name: "{{ employee_name }}"
-      delegate_to: "{{ vm_info.instance.ipv4 }}"
-
-    - name: Join VM to Active Directory Domain
-      win_domain_membership:
-        dns_domain_name: "{{ domain_name }}"
-        domain_admin_user: "{{ domain_admin_user }}"
-        domain_admin_password: "{{ domain_admin_password }}"
-        hostname: "{{ employee_name }}"
-      delegate_to: "{{ vm_info.instance.ipv4 }}"
-
-    - name: Reboot VM to complete domain join
-      win_reboot:
-      delegate_to: "{{ vm_info.instance.ipv4 }}"
-
-    - name: Install department-specific software
-      win_shell: |
-        if ("{{ department }}" -eq "IT department") {
-          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\Wireshark-win64-4.0.17.msi" -ArgumentList "/silent" -Wait
-        } elseif ("{{ department }}" -eq "HR department") {
-          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
-        }
+        name: "{{ employee_name }}.melmel.local"
       delegate_to: "{{ vm_info.instance.ipv4 }}"
