@@ -69,39 +69,7 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
-      
-    # - name: Wait for 3 minutes
-    #   pause:
-    #     minutes: 3
 
-    # - name: Join Windows machine to the domain
-    #   win_domain_membership:
-    #     dns_domain_name: "{{ domain_name }}"
-    #     domain_admin_user: "{{ domain_admin_user }}"
-    #     domain_admin_password: "{{ domain_admin_password }}"
-    #     ou_path: "{{ ou_path }}"
-    #     hostname: "{{ employee_name }}"
-    #     state: domain
-    #   delegate_to: "{{ employee_name }}"
-
-    # - name: Reboot the Windows machine after joining the domain
-    #   win_reboot:
-    #   delegate_to: "{{ employee_name }}"
-
-    #   register: vm_info
-
-    # - name: Retrieve VM IP address
-    #   community.vmware.vmware_guest_info:
-    #     hostname: "{{ vcenter_hostname }}"
-    #     username: "{{ vcenter_username }}"
-    #     password: "{{ vcenter_password }}"
-    #     validate_certs: no
-    #     datacenter: "{{ vcenter_datacenter }}"
-    #     name: "{{ employee_name }}"
-    #   delegate_to: localhost
-    #   register: vm_info
-
-    # - name: Set VM hostname and DNS name
-    #   win_hostname:
-    #     name: "{{ employee_name }}.melmel.local"
-    #   delegate_to: "{{ vm_info.instance.ipv4 }}"
+    - name: Run the PowerShell script to join the domain
+      win_shell: C:\Scripts\join_domain.ps1
+      delegate_to: "{{ new_vm_ip }}"
