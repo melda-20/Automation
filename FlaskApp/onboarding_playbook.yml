@@ -50,7 +50,7 @@
       delegate_to: 192.168.60.100
 
     # Create and configure VM
-    - name: Clone VM from template
+    - name: Clone VM and set network adapter
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -67,6 +67,11 @@
         customization:
           hostname: "{{ employee_name }}"
           domain: "melmel.local"
+          nic_settings:
+            - name: "2719_I483725_PVlanB"
+              dns_servers:
+                - "192.168.60.100"
+
     #   register: vm_info
 
     # - name: Retrieve VM IP address
