@@ -69,7 +69,7 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
-        register: vm_creation_info
+      register: vm_creation_info
 
     # - name: Haal IP adres van machine op
     #   community.vmware.vmware_guest_info:
