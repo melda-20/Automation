@@ -35,6 +35,7 @@
   hosts: localhost
   vars:
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
+    department: "{{ department }}"
   tasks:
     - name: Clone VM from template
       community.vmware.vmware_guest:
@@ -50,20 +51,22 @@
         state: "powered-on"
         wait_for_ip_address: true
         resource_pool: "I483725"
-    
+      register: vm_info
+
     - name: Wait for connection to VM
       wait_for_connection:
+        host: "{{ vm_info.instance.ip_address }}"
         timeout: 300
-        delay: 3
-        
+        delay: 30
+
     - name: Set the VM hostname to match the user
       win_hostname:
         name: "{{ employee_name }}"
-      delegate_to: "{{ employee_name }}"
+      delegate_to: "{{ vm_info.instance.ip_address }}"
 
     - name: Reboot the VM
       win_reboot:
-      delegate_to: "{{ employee_name }}"
+      delegate_to: "{{ vm_info.instance.ip_address }}"
 
     - name: Install department-specific software
       win_shell: |
@@ -72,4 +75,4 @@
         } elseif ("{{ department }}" -eq "HR department") {
           Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
         }
-      delegate_to: "{{ employee_name }}"
+      delegate_to: "{{ vm_info.instance.ip_address }}"
