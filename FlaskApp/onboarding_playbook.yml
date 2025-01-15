@@ -49,8 +49,7 @@
         }
       delegate_to: 192.168.60.100
 
-    # Create and configure VM
-    - name: Clone VM and set network adapter
+    - name: Clone VM and assign specific network
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -64,10 +63,12 @@
         state: powered-on
         wait_for_ip_address: yes
         resource_pool: "{{ resource_pool }}"
+        network:
+          - name: "2719_I483725_PVlanB"
+            type: "dhcp"
         customization:
           hostname: "{{ employee_name }}"
           domain: "melmel.local"
-          dns_servers: "192.168.0.10"  # This is your DC’s IP address
 
 
     #   register: vm_info
