@@ -9,7 +9,7 @@
     vcenter_datacenter: "Netlab-DC"
     vcenter_datastore: "DataCluster-Students"
     vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
-    vm_template: "Win10-2"
+    vm_template: "WIN10-VM-TMP"
     resource_pool: "I483725"
     domain_name: "melmel.local"
     domain_admin_user: "Administrator"
@@ -70,23 +70,23 @@
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
       
-    - name: Wait for 3 minutes
-      pause:
-        minutes: 3
+    # - name: Wait for 3 minutes
+    #   pause:
+    #     minutes: 3
 
-    - name: Join Windows machine to the domain
-      win_domain_membership:
-        dns_domain_name: "{{ domain_name }}"
-        domain_admin_user: "{{ domain_admin_user }}"
-        domain_admin_password: "{{ domain_admin_password }}"
-        ou_path: "{{ ou_path }}"
-        hostname: "{{ employee_name }}"
-        state: domain
-      delegate_to: "{{ employee_name }}"
-      
-    - name: Reboot the Windows machine after joining the domain
-      win_reboot:
-      delegate_to: "{{ employee_name }}"
+    # - name: Join Windows machine to the domain
+    #   win_domain_membership:
+    #     dns_domain_name: "{{ domain_name }}"
+    #     domain_admin_user: "{{ domain_admin_user }}"
+    #     domain_admin_password: "{{ domain_admin_password }}"
+    #     ou_path: "{{ ou_path }}"
+    #     hostname: "{{ employee_name }}"
+    #     state: domain
+    #   delegate_to: "{{ employee_name }}"
+
+    # - name: Reboot the Windows machine after joining the domain
+    #   win_reboot:
+    #   delegate_to: "{{ employee_name }}"
 
     #   register: vm_info
 
