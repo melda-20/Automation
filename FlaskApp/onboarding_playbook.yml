@@ -63,7 +63,7 @@
 
     - name: Wait for VM to boot and connect
       wait_for_connection:
-        host: "{{ vm_info.instance.ip_address }}"
+        hosts: "{{ vm_info.instance.ip_address }}"
         timeout: 300
         delay: 30
 
