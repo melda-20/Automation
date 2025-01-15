@@ -35,7 +35,6 @@
   hosts: localhost
   vars:
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-    department: "{{ department }}"
   tasks:
     - name: Clone VM from template
       community.vmware.vmware_guest:
@@ -55,41 +54,6 @@
 
     - name: Wait for VM to boot and connect
       wait_for_connection:
+        host: "{{ vm_info.instance.ip_address }}"
         timeout: 300
         delay: 30
-
-    - name: Set VM hostname in vSphere
-      community.vmware.vmware_guest_customization:
-        hostname: "192.168.200.24"
-        username: "I483725@fontysict.nl"
-        password: "DF242hv[!"
-        validate_certs: False
-        datacenter: "Netlab-DC"
-        folder: "/_Courses/I3-DB01/I483725/Orchestration"
-        name: "{{ employee_name }}"
-        customization:
-          hostname: "{{ employee_name }}"
-          domain: "melmel.local"
-          network:
-            - dns_servers: ["192.168.60.100"]
-              dns_suffix_list: ["melmel.local"]
-
-    - name: Reboot VM in vSphere
-      community.vmware.vmware_guest_powerstate:
-        hostname: "192.168.200.24"
-        username: "I483725@fontysict.nl"
-        password: "DF242hv[!"
-        validate_certs: False
-        state: rebooted
-        datacenter: "Netlab-DC"
-        folder: "/_Courses/I3-DB01/I483725/Orchestration"
-        name: "{{ employee_name }}"
-
-    - name: Install department-specific software
-      win_shell: |
-        if ("{{ department }}" -eq "IT department") {
-          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\Wireshark-win64-4.0.17.msi" -ArgumentList "/silent" -Wait
-        } elseif ("{{ department }}" -eq "HR department") {
-          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
-        }
-      delegate_to: "{{ vm_info.instance.ip_address }}"
