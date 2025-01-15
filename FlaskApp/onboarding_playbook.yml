@@ -2,7 +2,7 @@
 - name: Onboarding new employee and deploying VM
   hosts: localhost
   vars:
-    # Algemene variabelen
+    # General variables
     vcenter_hostname: "192.168.200.24"
     vcenter_username: "I483725@fontysict.nl"
     vcenter_password: "DF242hv[!"
@@ -15,14 +15,15 @@
     domain_admin_user: "Administrator"
     domain_admin_password: "securePass1!"
 
-    # Werknemer-specifieke variabelen
+    # Employee-specific variables
     employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
     department_group: "{{ department }}"
     ou_path: "OU={{ department }},OU=Departments,DC=melmel,DC=local"
+
   tasks:
-    # Active Directory gebruiker aanmaken
+    # Create AD user
     - name: Create new AD user in correct OU using PowerShell
       win_shell: |
         $password = ConvertTo-SecureString -AsPlainText -Force "{{ employee_password }}"
@@ -48,7 +49,7 @@
         }
       delegate_to: 192.168.60.100
 
-    # Virtuele machine aanmaken en configureren
+    # Create and configure VM
     - name: Clone VM from template
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
@@ -65,11 +66,21 @@
         resource_pool: "{{ resource_pool }}"
       register: vm_info
 
-    - name: Wait for VM to boot and connect
-      ansible.builtin.wait_for_connection:
-        host: "{{ vm_info.instance.ipv4 }}"
-        timeout: 600
-        delay: 30
+    - name: Retrieve VM IP address
+      community.vmware.vmware_guest_info:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ vcenter_datacenter }}"
+        name: "{{ employee_name }}"
+      delegate_to: localhost
+      register: vm_info
+
+    - name: Set VM IP fact
+      set_fact:
+        vm_ip: "{{ vm_info.instance.ipv4 }}"
+      when: vm_info.instance.ipv4 is defined
 
     - name: Set VM hostname
       win_hostname:
