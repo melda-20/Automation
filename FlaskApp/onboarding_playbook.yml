@@ -1,13 +1,28 @@
 ---
-- name: Onboarding new employee
-  hosts: windows
+- name: Onboarding new employee and deploying VM
+  hosts: localhost
   vars:
+    # Algemene variabelen
+    vcenter_hostname: "192.168.200.24"
+    vcenter_username: "I483725@fontysict.nl"
+    vcenter_password: "DF242hv[!]"
+    vcenter_datacenter: "Netlab-DC"
+    vcenter_datastore: "DataCluster-Students"
+    vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
+    vm_template: "Win10"
+    resource_pool: "I483725"
+    domain_name: "melmel.local"
+    domain_admin_user: "Administrator"
+    domain_admin_password: "securePass1!"
+
+    # Werknemer-specifieke variabelen
     employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
     department_group: "{{ department }}"
     ou_path: "OU={{ department }},OU=Departments,DC=melmel,DC=local"
   tasks:
+    # Active Directory gebruiker aanmaken
     - name: Create new AD user in correct OU using PowerShell
       win_shell: |
         $password = ConvertTo-SecureString -AsPlainText -Force "{{ employee_password }}"
@@ -21,6 +36,7 @@
                    -Enabled $true `
                    -Description "New employee in {{ department }}" `
                    -Path "{{ ou_path }}"
+      delegate_to: 192.168.60.100
 
     - name: Add user to department-specific group using PowerShell
       win_shell: |
@@ -30,47 +46,35 @@
         } else {
             Write-Host "Group {{ department_group }} does not exist."
         }
+      delegate_to: 192.168.60.100
 
-- name: Deploy VM and configure for AD
-  hosts: localhost
-  vars:
-    employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-    department: "{{ department }}"
-    domain_name: "melmel.local"
-    domain_admin_user: "Administrator"
-    domain_admin_password: "securePass1!"
-  tasks:
+    # Virtuele machine aanmaken en configureren
     - name: Clone VM from template
       community.vmware.vmware_guest:
-        hostname: "192.168.200.24"
-        username: "I483725@fontysict.nl"
-        password: "DF242hv[!"
-        validate_certs: False
-        datacenter: "Netlab-DC"
-        datastore: "DataCluster-Students"
-        folder: "/_Courses/I3-DB01/I483725/Orchestration"
-        template: "Win10"
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ vcenter_datacenter }}"
+        datastore: "{{ vcenter_datastore }}"
+        folder: "{{ vm_folder }}"
+        template: "{{ vm_template }}"
         name: "{{ employee_name }}"
-        state: "powered-on"
-        wait_for_ip_address: true
-        resource_pool: "I483725"
+        state: powered-on
+        wait_for_ip_address: yes
+        resource_pool: "{{ resource_pool }}"
       register: vm_info
-
-    # - name: Ensure VM has an IP
-    #   set_fact:
-    #     vm_ip: "{{ vm_info.instance.ip_address }}"
-    #   when: vm_info.instance.ip_address is defined
 
     - name: Wait for VM to boot and connect
       ansible.builtin.wait_for_connection:
-        host: "{{ vm_info.instance.ip_address }}"
+        host: "{{ vm_info.instance.ipv4 }}"
         timeout: 600
         delay: 30
 
     - name: Set VM hostname
       win_hostname:
         name: "{{ employee_name }}"
-      delegate_to: "{{ vm_info.instance.ip_address }}"
+      delegate_to: "{{ vm_info.instance.ipv4 }}"
 
     - name: Join VM to Active Directory Domain
       win_domain_membership:
@@ -78,11 +82,11 @@
         domain_admin_user: "{{ domain_admin_user }}"
         domain_admin_password: "{{ domain_admin_password }}"
         hostname: "{{ employee_name }}"
-      delegate_to: "{{ vm_info.instance.ip_address }}"
+      delegate_to: "{{ vm_info.instance.ipv4 }}"
 
     - name: Reboot VM to complete domain join
       win_reboot:
-      delegate_to: "{{ vm_info.instance.ip_address }}"
+      delegate_to: "{{ vm_info.instance.ipv4 }}"
 
     - name: Install department-specific software
       win_shell: |
@@ -91,32 +95,4 @@
         } elseif ("{{ department }}" -eq "HR department") {
           Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
         }
-      delegate_to: "{{ vm_info.instance.ip_address }}"
-
-
-# - name: Deploy VM for new user
-#   hosts: localhost
-#   vars:
-#     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
-#   tasks:
-#     - name: Clone VM from template
-#       community.vmware.vmware_guest:
-#         hostname: "192.168.200.24"
-#         username: "I483725@fontysict.nl"
-#         password: "DF242hv[!"
-#         validate_certs: False
-#         datacenter: "Netlab-DC"
-#         datastore: "DataCluster-Students"
-#         folder: "/_Courses/I3-DB01/I483725/Orchestration"
-#         template: "Win10"
-#         name: "{{ employee_name }}"
-#         state: "powered-on"
-#         wait_for_ip_address: true
-#         resource_pool: "I483725"
-#       register: vm_info
-
-#     - name: Wait for VM to boot and connect
-#       wait_for_connection:
-#         host: "{{ vm_info.instance.ip_address }}"
-#         timeout: 300
-#         delay: 30
+      delegate_to: "{{ vm_info.instance.ipv4 }}"
