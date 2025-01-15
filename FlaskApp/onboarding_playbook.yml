@@ -77,10 +77,10 @@
       delegate_to: localhost
       register: vm_info
 
-    - name: Set VM IP fact
-      set_fact:
-        vm_ip: "{{ vm_info.instance.ipv4 }}"
-      when: vm_info.instance.ipv4 is defined
+    # - name: Set VM IP fact
+    #   set_fact:
+    #     vm_ip: "{{ vm_info.instance.ipv4 }}"
+    #   when: vm_info.instance.ipv4 is defined
 
     - name: Set VM hostname and DNS name
       win_hostname:
