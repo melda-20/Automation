@@ -1,13 +1,12 @@
 ---
 - name: Onboarding new employee
-  hosts: windows, localhost
+  hosts: windows
   vars:
     employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
     department_group: "{{ department }}"
     ou_path: "OU={{ department }},OU=Departments,DC=melmel,DC=local"
-  
   tasks:
     - name: Create new AD user in correct OU using PowerShell
       win_shell: |
@@ -32,8 +31,13 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
 
-    - name: Clone VM from temp
-      community.vmare.vmware_guest:
+- name: Deploy VM for new user
+  hosts: localhost
+  vars:
+    employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
+  tasks:
+    - name: Clone VM from template
+      community.vmware.vmware_guest:
         hostname: "192.168.200.24"
         username: "I483725@fontysict.nl"
         password: "DF242hv[!"
@@ -47,15 +51,11 @@
         wait_for_ip_address: true
         resource_pool: "I483725"
 
-    - name: wait for connection to VM
+    - name: Wait for connection to VM
       wait_for_connection:
         timeout: 300
         delay: 30
-
-    - name: Add VM to inventory
-      add_host:
-        name: "{{ employee_name }}"
-        groups: windows
+        host: "{{ employee_name }}"
 
     - name: Install department-specific software
       win_shell: |
@@ -64,3 +64,4 @@
         } elseif ("{{ department }}" -eq "HR department") {
           Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
         }
+      delegate_to: "{{ employee_name }}"
