@@ -50,12 +50,20 @@
         state: "powered-on"
         wait_for_ip_address: true
         resource_pool: "I483725"
-
+    
     - name: Wait for connection to VM
       wait_for_connection:
         timeout: 300
-        delay: 30
-        host: "{{ employee_name }}"
+        delay: 3
+        
+    - name: Set the VM hostname to match the user
+      win_hostname:
+        name: "{{ employee_name }}"
+      delegate_to: "{{ employee_name }}"
+
+    - name: Reboot the VM
+      win_reboot:
+      delegate_to: "{{ employee_name }}"
 
     - name: Install department-specific software
       win_shell: |
