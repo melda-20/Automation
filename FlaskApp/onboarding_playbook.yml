@@ -32,42 +32,29 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
 
-    - name: Deploy VM
+    - name: Clone VM from temp
       community.vmare.vmware_guest:
         hostname: "192.168.200.24"
         username: "I483725@fontysict.nl"
         password: "DF242hv[!"
         validate_certs: False
-        name: "{{ employee_name }}"
-        template: "Win10" #"/_Courses/I3-DB01/I483725/Orchestration/Win10"
         datacenter: "Netlab-DC"
         datastore: "DataCluster-Students"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        template: "Win10"
+        name: "{{ employee_name }}"
+        state: "powered-on"
+        wait_for_ip_address: true
         resource_pool: "I483725"
-        state: "poweredon"
-        wait_for_ip_address: no
 
-
-        #networks:
-        #  - name: "2719_I483725_PVlanB"
-        #    type: "dhcp"
-        #disk:
-        #  - size_gb: 50
-        #    type: "thin"
-        #    datastore: "NIM01-I3-DB"
-        #hardware:
-        #  memory_mb: 4096
-        #  num_cpus: 2
-
-    - name: Wait for VM to boot and get an IP address
-      wait_for:
-        host: "Test-VM" #"{{ employee_name }}-VM"
-        port: 5985
+    - name: wait for connection to VM
+      wait_for_connection:
         timeout: 300
+        delay: 30
 
     - name: Add VM to inventory
       add_host:
-        name: "Test-VM" #"{{ employee_name }}-VM"
+        name: "{{ employee_name }}"
         groups: windows
 
     - name: Install department-specific software
