@@ -67,7 +67,7 @@
           - name: "2719_I483725_PVlanB"
             type: "dhcp"
         customization:
-          hostname: "{{ employee_name }}"
+          hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
 
 
