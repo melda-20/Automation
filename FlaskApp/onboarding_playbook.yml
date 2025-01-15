@@ -64,25 +64,23 @@
         state: powered-on
         wait_for_ip_address: yes
         resource_pool: "{{ resource_pool }}"
-      register: vm_info
+        customization:
+          hostname: "{{ employee_name }}"
+          domain: "melmel.local"
+    #   register: vm_info
 
-    - name: Retrieve VM IP address
-      community.vmware.vmware_guest_info:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: no
-        datacenter: "{{ vcenter_datacenter }}"
-        name: "{{ employee_name }}"
-      delegate_to: localhost
-      register: vm_info
+    # - name: Retrieve VM IP address
+    #   community.vmware.vmware_guest_info:
+    #     hostname: "{{ vcenter_hostname }}"
+    #     username: "{{ vcenter_username }}"
+    #     password: "{{ vcenter_password }}"
+    #     validate_certs: no
+    #     datacenter: "{{ vcenter_datacenter }}"
+    #     name: "{{ employee_name }}"
+    #   delegate_to: localhost
+    #   register: vm_info
 
-    # - name: Set VM IP fact
-    #   set_fact:
-    #     vm_ip: "{{ vm_info.instance.ipv4 }}"
-    #   when: vm_info.instance.ipv4 is defined
-
-    - name: Set VM hostname and DNS name
-      win_hostname:
-        name: "{{ employee_name }}.melmel.local"
-      delegate_to: "{{ vm_info.instance.ipv4 }}"
+    # - name: Set VM hostname and DNS name
+    #   win_hostname:
+    #     name: "{{ employee_name }}.melmel.local"
+    #   delegate_to: "{{ vm_info.instance.ipv4 }}"
