@@ -56,10 +56,10 @@
         resource_pool: "I483725"
       register: vm_info
 
-    - name: Ensure VM has an IP
-      set_fact:
-        vm_ip: "{{ vm_info.instance.ip_address }}"
-      when: vm_info.instance.ip_address is defined
+    # - name: Ensure VM has an IP
+    #   set_fact:
+    #     vm_ip: "{{ vm_info.instance.ip_address }}"
+    #   when: vm_info.instance.ip_address is defined
 
     - name: Wait for VM to boot and connect
       wait_for_connection:
