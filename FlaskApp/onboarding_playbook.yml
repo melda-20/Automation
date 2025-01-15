@@ -69,7 +69,24 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
+      
+    - name: Wait for 3 minutes
+      pause:
+        minutes: 3
 
+    - name: Join Windows machine to the domain
+      win_domain_membership:
+        dns_domain_name: "{{ domain_name }}"
+        domain_admin_user: "{{ domain_admin_user }}"
+        domain_admin_password: "{{ domain_admin_password }}"
+        ou_path: "{{ ou_path }}"
+        hostname: "{{ employee_name }}"
+        state: domain
+      delegate_to: "{{ employee_name }}"
+      
+    - name: Reboot the Windows machine after joining the domain
+      win_reboot:
+      delegate_to: "{{ employee_name }}"
 
     #   register: vm_info
 
