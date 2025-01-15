@@ -63,7 +63,7 @@
         state: powered-on
         wait_for_ip_address: yes
         resource_pool: "{{ resource_pool }}"
-        network:
+        networks:
           - name: "2719_I483725_PVlanB"
             type: "dhcp"
         customization:
