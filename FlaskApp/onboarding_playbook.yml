@@ -68,9 +68,9 @@
           hostname: "{{ employee_name }}"
           domain: "melmel.local"
           nic_settings:
-            - name: "2719_I483725_PVlanB"
-              dns_servers:
-                - "192.168.60.100"
+            - dns_servers:
+                - "192.168.0.10"  # This is your DC’s IP address
+
 
     #   register: vm_info
 
