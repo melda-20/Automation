@@ -4,16 +4,16 @@
   
   tasks:
     - name: Deploy VM
-      vmware_guest:
+      community.vmware.vmware_guest:
         hostname: "192.168.200.24"
         username: "I483725@fontysict.nl"
         password: "DF242hv[!"
         validate_certs: False
-        name: "Test-VM"
-        template: "Win10" #"/_Courses/I3-DB01/I483725/Orchestration/Win10"
         datacenter: "Netlab-DC"
         datastore: "DataCluster-Students"
         folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        template: "Win10"
+        name: "TESTTTT"
+        state: "powered-on"
+        wait_for_ip_address: true
         resource_pool: "I483725"
-        state: "poweredon"
-        wait_for_ip_address: no
