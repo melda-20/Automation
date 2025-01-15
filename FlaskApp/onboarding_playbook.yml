@@ -53,20 +53,32 @@
         resource_pool: "I483725"
       register: vm_info
 
-    - name: Wait for connection to VM
-      wait_for_connection:
-        host: "{{ vm_info.instance.ip_address }}"
-        timeout: 300
-        delay: 30
-
-    - name: Set the VM hostname to match the user
-      win_hostname:
+    - name: Set VM DNS name in vSphere
+      community.vmware.vmware_guest_customization:
+        hostname: "192.168.200.24"
+        username: "I483725@fontysict.nl"
+        password: "DF242hv[!"
+        validate_certs: False
+        datacenter: "Netlab-DC"
+        folder: "/_Courses/I3-DB01/I483725/Orchestration"
         name: "{{ employee_name }}"
-      delegate_to: "{{ vm_info.instance.ip_address }}"
+        customization:
+          hostname: "{{ employee_name }}"
+          domain: "melmel.local"
+          network:
+            - dns_servers: ["192.168.60.100"]
+              dns_suffix_list: ["melmel.local"]
 
-    - name: Reboot the VM
-      win_reboot:
-      delegate_to: "{{ vm_info.instance.ip_address }}"
+    - name: Reboot VM in vSphere
+      community.vmware.vmware_guest_powerstate:
+        hostname: "192.168.200.24"
+        username: "I483725@fontysict.nl"
+        password: "DF242hv[!"
+        validate_certs: False
+        state: rebooted
+        datacenter: "Netlab-DC"
+        folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        name: "{{ employee_name }}"
 
     - name: Install department-specific software
       win_shell: |
