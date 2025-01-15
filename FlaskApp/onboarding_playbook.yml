@@ -69,7 +69,11 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
+        register: vm_info
 
     - name: Run the PowerShell script to join the domain
+      vars:
+        ansible_user: "Student"
+        ansible_password: "student"
       win_shell: C:\Scripts\join_domain.ps1
-      delegate_to: "{{ new_vm_ip }}"
+      delegate_to: "{{ vm_info.instance.ipv4 }}"
