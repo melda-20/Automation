@@ -69,7 +69,17 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
-        register: vm_info
+
+    - name: Haal IP adres van machine op
+      community.vmware.vmware_guest_info:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ vcenter_datacenter }}"
+        name: "{{ var_vm_name }}"
+      delegate_to: localhost
+      register: vm_info
 
     - name: Run the PowerShell script to join the domain
       vars:
