@@ -30,11 +30,15 @@
         } else {
             Write-Host "Group {{ department_group }} does not exist."
         }
-
-- name: Deploy VM for new user
+        
+- name: Deploy VM and configure for AD
   hosts: localhost
   vars:
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
+    department: "{{ department }}"
+    domain_name: "melmel.local"
+    domain_admin_user: "Administrator"
+    domain_admin_password: "securePass1!"
   tasks:
     - name: Clone VM from template
       community.vmware.vmware_guest:
@@ -52,8 +56,67 @@
         resource_pool: "I483725"
       register: vm_info
 
+    - name: Ensure VM has an IP
+      set_fact:
+        vm_ip: "{{ vm_info.instance.ip_address }}"
+      when: vm_info.instance.ip_address is defined
+
     - name: Wait for VM to boot and connect
       wait_for_connection:
-        host: "{{ vm_info.instance.ip_address }}"
+        host: "{{ vm_ip }}"
         timeout: 300
         delay: 30
+
+    - name: Set VM hostname
+      win_hostname:
+        name: "{{ employee_name }}"
+      delegate_to: "{{ vm_ip }}"
+
+    - name: Join VM to Active Directory Domain
+      win_domain_membership:
+        dns_domain_name: "{{ domain_name }}"
+        domain_admin_user: "{{ domain_admin_user }}"
+        domain_admin_password: "{{ domain_admin_password }}"
+        hostname: "{{ employee_name }}"
+      delegate_to: "{{ vm_ip }}"
+
+    - name: Reboot VM to complete domain join
+      win_reboot:
+      delegate_to: "{{ vm_ip }}"
+
+    - name: Install department-specific software
+      win_shell: |
+        if ("{{ department }}" -eq "IT department") {
+          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\Wireshark-win64-4.0.17.msi" -ArgumentList "/silent" -Wait
+        } elseif ("{{ department }}" -eq "HR department") {
+          Start-Process -FilePath "\\192.168.60.100\SoftwareShare\googlechromestandaloneenterprise64.msi" -ArgumentList "/silent" -Wait
+        }
+      delegate_to: "{{ vm_ip }}"
+
+
+# - name: Deploy VM for new user
+#   hosts: localhost
+#   vars:
+#     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
+#   tasks:
+#     - name: Clone VM from template
+#       community.vmware.vmware_guest:
+#         hostname: "192.168.200.24"
+#         username: "I483725@fontysict.nl"
+#         password: "DF242hv[!"
+#         validate_certs: False
+#         datacenter: "Netlab-DC"
+#         datastore: "DataCluster-Students"
+#         folder: "/_Courses/I3-DB01/I483725/Orchestration"
+#         template: "Win10"
+#         name: "{{ employee_name }}"
+#         state: "powered-on"
+#         wait_for_ip_address: true
+#         resource_pool: "I483725"
+#       register: vm_info
+
+#     - name: Wait for VM to boot and connect
+#       wait_for_connection:
+#         host: "{{ vm_info.instance.ip_address }}"
+#         timeout: 300
+#         delay: 30
