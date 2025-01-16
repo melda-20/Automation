@@ -9,13 +9,13 @@
     vcenter_datacenter: "Netlab-DC"
     vcenter_datastore: "DataCluster-Students"
     vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
-    vm_template: "WIN10-Employee_template-4"
+    vm_template: "WIN10-Employee-Temp"
     resource_pool: "I483725"
     domain_name: "melmel.local"
     domain_admin_user: "Administrator"
     domain_admin_password: "securePass1!"
 
-    # Employee-specific variables
+    # Employee-specific variables from the Flask web app
     employee_password: "SecurePassword123!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
@@ -23,7 +23,7 @@
     ou_path: "OU={{ department }},OU=Departments,DC=melmel,DC=local"
 
   tasks:
-    # Create AD user
+    # Create AD user on DC
     - name: Create new AD user in correct OU using PowerShell
       win_shell: |
         $password = ConvertTo-SecureString -AsPlainText -Force "{{ employee_password }}"
@@ -49,6 +49,7 @@
         }
       delegate_to: 192.168.60.100
 
+    # Create Machine for the user
     - name: Clone VM and assign specific network
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
@@ -69,14 +70,14 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
-      register: vm_creation_info
+      # register: vm_creation_info
 
-    - name: Run the PowerShell script to join the domain
-      win_shell: C:\Scripts\join_domain.ps1
-      vars:
-        ansible_connection: winrm
-        ansible_port: 5985
-        ansible_winrm_transport: ntlm
-        ansible_user: "Admin"
-        ansible_password: "securePass1!"
-      delegate_to: "{{ vm_creation_info.instance.ipv4 }}"
+    # - name: Run the PowerShell script to join the domain
+    #   win_shell: C:\Scripts\join_domain.ps1
+    #   vars:
+    #     ansible_connection: winrm
+    #     ansible_port: 5985
+    #     ansible_winrm_transport: ntlm
+    #     ansible_user: "Admin"
+    #     ansible_password: "securePass1!"
+    #   delegate_to: "{{ vm_creation_info.instance.ipv4 }}"
