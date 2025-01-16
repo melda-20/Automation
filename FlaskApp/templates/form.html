@@ -4,44 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding and Offboarding</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #003d82;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            border-top: 2px solid #0056b3;
+            padding-top: 20px;
+        }
+
+        .form-section:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            input[type="text"], select, input[type="submit"] {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Onboarding Form</h1>
-    <form method="post" action="/">
-        <label>First name:</label><br>
-        <input type="text" name="given_name" required><br><br>
+    <div class="container">
+        <h1>Employee Management</h1>
 
-        <label>Middle name (optional):</label><br>
-        <input type="text" name="middle_name"><br><br>
+        <!-- Onboarding Form -->
+        <div class="form-section">
+            <h2>Onboarding Form</h2>
+            <form method="post" action="/">
+                <label>First Name:</label>
+                <input type="text" name="given_name" placeholder="Enter first name" required>
 
-        <label>Last name:</label><br>
-        <input type="text" name="last_name" required><br><br>
+                <label>Middle Name (Optional):</label>
+                <input type="text" name="middle_name" placeholder="Enter middle name">
 
-        <label>Birth date (dd-mm-yyyy):</label><br>
-        <input type="text" name="birth_date" required><br><br>
+                <label>Last Name:</label>
+                <input type="text" name="last_name" placeholder="Enter last name" required>
 
-        <label>Department:</label><br>
-        <select name="department" required>
-            <option value="IT department">IT department</option>
-            <option value="HR department">HR department</option>
-        </select><br><br>
+                <label>Birth Date (dd-mm-yyyy):</label>
+                <input type="text" name="birth_date" placeholder="Enter birth date" required>
 
-        <input type="submit" value="Submit Onboarding">
-    </form>
+                <label>Department:</label>
+                <select name="department" required>
+                    <option value="" disabled selected>Select a department</option>
+                    <option value="IT department">IT department</option>
+                    <option value="HR department">HR department</option>
+                </select>
 
-    <h1>Offboarding Form</h1>
-    <form method="post" action="/offboarding">
-        <label>Username:</label><br>
-        <input type="text" name="given_name" required><br><br>
+                <input type="submit" value="Submit Onboarding">
+            </form>
+        </div>
 
-        <label>Department:</label><br>
-        <select name="department" required>
-            <option value="IT department">IT department</option>
-            <option value="HR department">HR department</option>
-        </select><br><br>
+        <!-- Offboarding Form -->
+        <div class="form-section">
+            <h2>Offboarding Form</h2>
+            <form method="post" action="/offboarding">
+                <label>Username:</label>
+                <input type="text" name="given_name" placeholder="Enter username" required>
 
-        <input type="submit" value="Submit Offboarding">
-    </form>
+                <label>Department:</label>
+                <select name="department" required>
+                    <option value="" disabled selected>Select a department</option>
+                    <option value="IT department">IT department</option>
+                    <option value="HR department">HR department</option>
+                </select>
+
+                <input type="submit" value="Submit Offboarding">
+            </form>
+        </div>
+    </div>
 </body>
 </html>
