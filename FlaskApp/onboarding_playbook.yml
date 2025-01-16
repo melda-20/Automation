@@ -9,7 +9,7 @@
     vcenter_datacenter: "Netlab-DC"
     vcenter_datastore: "DataCluster-Students"
     vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
-    vm_template: "WIN10-Employee-Template-3"
+    vm_template: "WIN10-Employee-Template-4"
     resource_pool: "I483725"
     domain_name: "melmel.local"
     domain_admin_user: "Administrator"
@@ -77,6 +77,6 @@
         ansible_connection: winrm
         ansible_port: 5985
         ansible_winrm_transport: ntlm
-        ansible_user: "Student"
-        ansible_password: "student"
+        ansible_user: "Admin"
+        ansible_password: "securePass1!"
       delegate_to: "{{ vm_creation_info.instance.ipv4 }}"
