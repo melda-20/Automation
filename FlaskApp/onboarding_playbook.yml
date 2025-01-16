@@ -76,6 +76,7 @@
       vars:
         ansible_connection: winrm
         ansible_port: 5985
-        ansible_user: "Student"
+        ansible_winrm_transport: ntlm
+        ansible_user: "student"
         ansible_password: "student"
       delegate_to: "{{ vm_creation_info.instance.ipv4 }}"
