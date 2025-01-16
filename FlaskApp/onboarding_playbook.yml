@@ -9,7 +9,7 @@
     vcenter_datacenter: "Netlab-DC"
     vcenter_datastore: "DataCluster-Students"
     vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
-    vm_template: "WIN10-Employee-Temp"
+    vm_template: "WIN10-Employee-Temp-2"
     resource_pool: "I483725"
     domain_name: "melmel.local"
     domain_admin_user: "Administrator"
