@@ -1,0 +1,40 @@
+---
+- name: Offboarding employee and decommissioning resources
+  hosts: localhost
+  vars:
+    domain_name: "melmel.local"
+    domain_admin_user: "Administrator"
+    domain_admin_password: "securePass1!"
+
+  tasks:
+    - name: Disable AD user account
+      win_shell: |
+        Disable-ADAccount -Identity "{{ employee_name }}"
+        Write-Host "Account {{ employee_name }} has been disabled."
+      delegate_to: 192.168.60.100
+
+    - name: Remove AD user from all groups
+      win_shell: |
+        $groups = Get-ADUser -Identity "{{ employee_name }}" -Property MemberOf |
+                  Select-Object -ExpandProperty MemberOf
+        foreach ($group in $groups) {
+            Remove-ADGroupMember -Identity $group -Members "{{ employee_name }}" -Confirm:$false
+        }
+        Write-Host "All groups removed from {{ employee_name }}."
+      delegate_to: 192.168.60.100
+
+    - name: Delete AD user account
+      win_shell: |
+        Remove-ADUser -Identity "{{ employee_name }}" -Confirm:$false
+        Write-Host "Account {{ employee_name }} has been deleted."
+      delegate_to: 192.168.60.100
+
+    - name: Delete the VM associated with the user
+      community.vmware.vmware_guest:
+        hostname: "192.168.200.24"
+        username: "I483725@fontysict.nl"
+        password: "DF242hv[!"
+        validate_certs: no
+        name: "{{ employee_name }}"
+        state: powered-off
+      delegate_to: localhost

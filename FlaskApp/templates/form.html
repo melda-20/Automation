@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onboarding Form</title>
+    <title>{{ form_type.capitalize() }} Form</title>
 </head>
 
 <body>
-    <h1>Onboarding Form</h1>
+    <h1>{{ form_type.capitalize() }} Form</h1>
     <form method="post">
-        <label>First name:</label><br>
+        <label>First name (or username for offboarding):</label><br>
         <input type="text" name="given_name" required><br><br>
 
+        {% if form_type == "onboarding" %}
         <label>Middle name (optional):</label><br>
         <input type="text" name="middle_name"><br><br>
 
-        <label>last name:</label><br>
+        <label>Last name:</label><br>
         <input type="text" name="last_name" required><br><br>
 
-        <label>Birth date (dd-mm-jjjj):</label><br>
+        <label>Birth date (dd-mm-yyyy):</label><br>
         <input type="text" name="birth_date" required><br><br>
+        {% endif %}
 
         <label>Department:</label><br>
         <select name="department" required>
@@ -27,14 +29,7 @@
             <option value="HR department">HR department</option>
         </select><br><br>
 
-        <input type="submit" value="Send">
-
-        <!-- <h1>Offboarding Form</h1>
-        <form method="post">
-            <label>Username:</label><br>
-            <input type="text" name="given_name" required><br><br>
-
-            <input type="submit" value="Versturen">
-    </form> -->
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
