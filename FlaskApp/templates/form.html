@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ form_type.capitalize() }} Form</title>
+    <title>Onboarding and Offboarding</title>
 </head>
 
 <body>
-    <h1>{{ form_type.capitalize() }} Form</h1>
-    <form method="post">
-        <label>First name (or username for offboarding):</label><br>
+    <h1>Onboarding Form</h1>
+    <form method="post" action="/">
+        <label>First name:</label><br>
         <input type="text" name="given_name" required><br><br>
 
-        {% if form_type == "onboarding" %}
         <label>Middle name (optional):</label><br>
         <input type="text" name="middle_name"><br><br>
 
@@ -21,7 +20,6 @@
 
         <label>Birth date (dd-mm-yyyy):</label><br>
         <input type="text" name="birth_date" required><br><br>
-        {% endif %}
 
         <label>Department:</label><br>
         <select name="department" required>
@@ -29,7 +27,21 @@
             <option value="HR department">HR department</option>
         </select><br><br>
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit Onboarding">
+    </form>
+
+    <h1>Offboarding Form</h1>
+    <form method="post" action="/offboarding">
+        <label>Username:</label><br>
+        <input type="text" name="given_name" required><br><br>
+
+        <label>Department:</label><br>
+        <select name="department" required>
+            <option value="IT department">IT department</option>
+            <option value="HR department">HR department</option>
+        </select><br><br>
+
+        <input type="submit" value="Submit Offboarding">
     </form>
 </body>
 </html>
