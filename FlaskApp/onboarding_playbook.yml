@@ -48,27 +48,47 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
       delegate_to: 192.168.60.100
-
+      
     # Create Machine for the user
     - name: Clone VM and assign specific network
       community.vmware.vmware_guest:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: no
-        datacenter: "{{ vcenter_datacenter }}"
-        datastore: "{{ vcenter_datastore }}"
-        folder: "{{ vm_folder }}"
-        template: "{{ vm_template }}"
-        name: "{{ employee_name }}"
-        state: powered-on
-        wait_for_ip_address: yes
-        resource_pool: "{{ resource_pool }}"
-        customization:
-          hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
-          domain: "melmel.local"
-          dns_servers:
-            - "192.168.60.100"
+        hostname: "192.168.200.24"
+        username: "I483725@fontysict.nl"
+        password: "DF242hv[!"
+        validate_certs: False
+        datacenter: "Netlab-DC"
+        datastore: "DataCluster-Students"
+        folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        template: "Win10"
+        name: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
+        state: "powered-on"
+        wait_for_ip_address: true
+        resource_pool: "I483725"
+
+    # - name: Clone VM and assign specific network
+    #   community.vmware.vmware_guest:
+    #     hostname: "{{ vcenter_hostname }}"
+    #     username: "{{ vcenter_username }}"
+    #     password: "{{ vcenter_password }}"
+    #     validate_certs: no
+    #     datacenter: "{{ vcenter_datacenter }}"
+    #     datastore: "{{ vcenter_datastore }}"
+    #     folder: "{{ vm_folder }}"
+    #     template: "{{ vm_template }}"
+    #     name: "{{ employee_name }}"
+    #     state: powered-on
+    #     wait_for_ip_address: yes
+    #     resource_pool: "{{ resource_pool }}"
+    #     networks:
+    #       - name: "2719_I483725_PVlanB"
+    #         type: "dhcp"
+    #         dns_servers:
+    #           - "192.168.60.100"
+    #     customization:
+    #       hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
+    #       domain: "melmel.local"
+    #       dns_servers:
+    #         - "192.168.60.100"
 
 
       # register: vm_creation_info
