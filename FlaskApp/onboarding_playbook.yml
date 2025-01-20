@@ -16,7 +16,7 @@
     domain_admin_password: "securePass1!"
 
     # Employee-specific variables from the Flask web app
-    employee_password: "SecurePassword123!"
+    employee_password: "Welcome01!!"
     display_name: "{{ given_name }} {{ middle_name | default('') }} {{ last_name }}"
     employee_name: "{{ given_name | lower }}.{{ last_name | lower }}"
     department_group: "{{ department }}"
@@ -70,6 +70,8 @@
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
           domain: "melmel.local"
+          dns_servers:
+            - "192.168.60.100"
       # register: vm_creation_info
 
     # - name: Run the PowerShell script to join the domain
