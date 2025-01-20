@@ -58,7 +58,7 @@
         validate_certs: False
         datacenter: "Netlab-DC"
         datastore: "DataCluster-Students"
-        folder: "/_Courses/I3-DB01/I483725/Orchestration"
+        folder: "/_Courses/I3-DB01/I483725/Orchestration/users"
         template: "Win10"
         name: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
         state: "powered-on"
