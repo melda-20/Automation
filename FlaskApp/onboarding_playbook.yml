@@ -8,7 +8,7 @@
     vcenter_password: "DF242hv[!"
     vcenter_datacenter: "Netlab-DC"
     vcenter_datastore: "DataCluster-Students"
-    vm_folder: "/_Courses/I3-DB01/I483725/Orchestration"
+    vm_folder: "/_Courses/I3-DB01/I483725/Orchestration/Users"
     vm_template: "Win10"
     resource_pool: "I483725"
     domain_name: "melmel.local"
