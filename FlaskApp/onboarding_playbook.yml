@@ -48,7 +48,7 @@
             Write-Host "Group {{ department_group }} does not exist."
         }
       delegate_to: 192.168.60.100
-
+      
     # Create Machine for the user
     - name: Clone VM and assign specific network
       community.vmware.vmware_guest:
@@ -67,16 +67,13 @@
         networks:
           - name: "2719_I483725_PVlanB"
             type: "dhcp"
-            dns_servers:  # Apply DNS settings directly in the network config
+            dns_servers:
               - "192.168.60.100"
         customization:
+          hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
+          domain: "melmel.local"
           dns_servers:
-            - "192.168.60.100"  # Redundant to ensure DNS is applied
-          dns_suffixes:
-            - "melmel.local"
-          linux_options:
-            host_name: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
-            domain: "melmel.local"
+            - "192.168.60.100"
 
 
       # register: vm_creation_info
