@@ -66,12 +66,13 @@
         resource_pool: "{{ resource_pool }}"
         networks:
           - name: "2719_I483725_PVlanB"
-            type: "dhcp"
+            type: "dhcp"  # Change to "static" if you want a static IP
+            dns_servers:
+              - "192.168.60.100"
         customization:
           hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
-          domain: "melmel.local"
-          dns_servers:
-            - "192.168.60.100"
+
+
       # register: vm_creation_info
 
     # - name: Run the PowerShell script to join the domain
