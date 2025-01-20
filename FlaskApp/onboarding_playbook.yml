@@ -66,11 +66,17 @@
         resource_pool: "{{ resource_pool }}"
         networks:
           - name: "2719_I483725_PVlanB"
-            type: "dhcp"  # Change to "static" if you want a static IP
-            dns_servers:
+            type: "dhcp"
+            dns_servers:  # Apply DNS settings directly in the network config
               - "192.168.60.100"
         customization:
-          hostname: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
+          dns_servers:
+            - "192.168.60.100"  # Redundant to ensure DNS is applied
+          dns_suffixes:
+            - "melmel.local"
+          linux_options:
+            host_name: "{{ given_name | lower | truncate(8, '') }}-{{ last_name | lower | truncate(6, '') }}"
+            domain: "melmel.local"
 
 
       # register: vm_creation_info
