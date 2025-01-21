@@ -1,0 +1,18 @@
+---
+- name: Deploy new HTML files
+  hosts: "{{ target_environment }}"
+  become: yes
+
+  tasks:
+    - name: Copy HTML files to the web server
+      copy:
+        src: /var/jenkins_home/workspace/{{ jenkins_job_name }}/html/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Restart Apache to apply changes
+      service:
+        name: apache2
+        state: restarted
