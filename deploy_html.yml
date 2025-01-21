@@ -1,12 +1,12 @@
 ---
 - name: Deploy index.html to web servers
   hosts: "{{ target_environment }}"
-  become: yes  # Ensures tasks run with sudo privileges
+  become: yes
 
   tasks:
     - name: Copy index.html to the web server
       copy:
-        src: /var/jenkins_home/workspace/{{ jenkins_job_name }}/html/
+        src: "{{ html_src }}"
         dest: /var/www/html/index.html
         owner: www-data
         group: www-data
